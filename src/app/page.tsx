@@ -24,9 +24,7 @@ export default function Home() {
         ご質問やお問い合わせは <strong>kikaikintots@gmail.com</strong> までお願いします。
       </p>
 
-      <p style={{ marginTop: "2rem", color: "gray", fontSize: "0.9rem" }}>
-        ※ このページはStripe審査用に一時的に公開されたものです。
-      </p>
+
     </main>
   );
 }
