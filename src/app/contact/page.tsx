@@ -30,7 +30,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300">
       <div className="w-full max-w-xl mx-auto p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg">
         <h1 className="text-2xl font-bold mb-4 text-center">お問い合わせ</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -59,7 +59,7 @@ export default function ContactPage() {
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+            className="bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-white px-4 py-2 rounded w-full"
           >
             送信
           </button>

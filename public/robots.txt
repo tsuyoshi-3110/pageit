@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://pageit.shop
+
+# Sitemaps
+Sitemap: https://pageit.shop/sitemap.xml
