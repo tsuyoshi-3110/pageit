@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 export default function ContactPage() {
-  const [name, setName] = useState(""); // ← name を追加
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
@@ -13,7 +13,7 @@ export default function ContactPage() {
 
     const res = await fetch("/api/send-contact", {
       method: "POST",
-      body: JSON.stringify({ name, email, message }), // ← name も送信
+      body: JSON.stringify({ name, email, message }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -30,40 +30,42 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="max-w-xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">お問い合わせ</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          required
-          placeholder="お名前"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="email"
-          required
-          placeholder="返信先メールアドレス"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border p-2 rounded"
-        />
-        <textarea
-          required
-          placeholder="お問い合わせ内容"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="w-full border p-2 rounded h-32"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          送信
-        </button>
-        <p className="text-sm">{status}</p>
-      </form>
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+      <div className="w-full max-w-xl mx-auto p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg">
+        <h1 className="text-2xl font-bold mb-4 text-center">お問い合わせ</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            required
+            placeholder="お名前"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border p-2 rounded"
+          />
+          <input
+            type="email"
+            required
+            placeholder="返信先メールアドレス"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border p-2 rounded"
+          />
+          <textarea
+            required
+            placeholder="お問い合わせ内容"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="w-full border p-2 rounded h-32"
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+          >
+            送信
+          </button>
+          <p className="text-sm text-center">{status}</p>
+        </form>
+      </div>
     </main>
   );
 }

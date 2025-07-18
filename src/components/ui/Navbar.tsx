@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="bg-blue-100 border-b border-blue-200 sticky top-0 z-50">
+    <nav className="bg-gradient-to-br from-blue-200 via-purple-200 to-pink-300 sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/" className="text-xl font-bold text-blue-700">
           Pageit
