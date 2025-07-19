@@ -48,6 +48,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
+      <head>
+        <meta
+          name="google-site-verification"
+          content="b2le0w60OVwzkCTsr2nc9z3Mdh5_MlfiFUQfsQXHo1w"
+        />
+      </head>
       <body>
         <Navbar />
         {children}
