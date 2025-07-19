@@ -67,11 +67,11 @@ export default function GuidePage() {
         />
         <meta
           property="og:image"
-          content="https://あなたのドメイン/images/ogpImage.jpg"
+          content="https://www.pageit.shop/images/ogpImage.jpg"
         />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ja_JP" />
-        <link rel="canonical" href="https://あなたのドメイン/guide" />
+        <link rel="canonical" href="https://www.pageit.shop/guide" />
         <meta name="robots" content="index, follow" />
       </Head>
 

@@ -7,7 +7,9 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Pageit（ページット）｜スマホで簡単編集できるホームページサブスク</title>
+        <title>
+          Pageit（ページット）｜スマホで簡単編集できるホームページサブスク
+        </title>
         <meta
           name="description"
           content="Pageit（ページット）は、動画×スマホ×AIで簡単にホームページを更新できる中小企業・個人店舗向けの編集サービスです。スマホだけでトップ動画・画像・テキストを自在に管理できます。"
@@ -16,16 +18,26 @@ export default function Home() {
           name="keywords"
           content="Pageit, ページット, ホームページ編集, スマホ更新, 店舗向けHP, 動画ホームページ, AIホームページ"
         />
-        <meta property="og:title" content="Pageit（ページット）｜スマホで簡単編集" />
+        <meta
+          property="og:title"
+          content="Pageit（ページット）｜スマホで簡単編集"
+        />
         <meta
           property="og:description"
           content="スマホで簡単に編集できるホームページ。動画・画像・AIがすべて揃った次世代型サブスク型Webサービス。"
         />
-        <meta property="og:image" content="https://あなたのドメイン/images/ogpImage.jpg" />
+        <meta
+          property="og:image"
+          content="https://www.pageit.shop/images/ogpImage.png"
+        />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ja_JP" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://あなたのドメイン/" />
+        <link rel="canonical" href="https://www.pageit.shop/" />
+        <meta
+          name="google-site-verification"
+          content="b2le0w60OVwzkCTsr2nc9z3Mdh5_MlfiFUQfsQXHo1w"
+        />
       </Head>
 
       <main
@@ -64,11 +76,15 @@ export default function Home() {
                 <p>PC不要。メニューやお知らせもその場で更新できます。</p>
               </div>
               <div className="p-6 rounded-xl shadow-lg bg-transparent backdrop-blur-sm">
-                <h3 className="font-bold text-lg mb-2">🎥 トップ動画で印象UP</h3>
+                <h3 className="font-bold text-lg mb-2">
+                  🎥 トップ動画で印象UP
+                </h3>
                 <p>来店前のユーザーに強いインパクトを与える動画表示。</p>
               </div>
               <div className="p-6 rounded-xl shadow-lg bg-transparent backdrop-blur-sm">
-                <h3 className="font-bold text-lg mb-2">✍️ AIが文章を自動生成</h3>
+                <h3 className="font-bold text-lg mb-2">
+                  ✍️ AIが文章を自動生成
+                </h3>
                 <p>商品説明やお知らせ文章も、キーワード入力だけでOK。</p>
               </div>
               <div className="p-6 rounded-xl shadow-lg bg-transparent backdrop-blur-sm">

@@ -40,7 +40,7 @@ export default function Navbar() {
           {/* ✖ 閉じるボタン */}
           <button
             onClick={() => setMenuOpen(false)}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl"
+            className="absolute top-4 left-4 text-gray-500 hover:text-gray-800 text-2xl"
             aria-label="Close menu"
           >
             ×
