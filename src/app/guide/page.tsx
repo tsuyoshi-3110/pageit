@@ -178,12 +178,39 @@ export default function GuidePage() {
                 <span className="text-green-600 font-bold">1,500円</span>
                 （税別）
               </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="border p-4 rounded shadow">
+                  <h3 className="font-bold text-blue-700">自己撮影プラン</h3>
+                  <p>
+                    初期費用：30,000円
+                    <br />
+                    月額：1,500円
+                  </p>
+                </div>
+                <div className="border p-4 rounded shadow bg-blue-50">
+                  <h3 className="font-bold text-pink-700">おまかせプラン</h3>
+                  <p>
+                    初期費用：80,000円（撮影＋編集込み）
+                    <br />
+                    月額：1,500円
+                  </p>
+                </div>
+              </div>
               <p className="text-sm text-gray-500 mt-2">
                 ※キャンペーンは予告なく終了する場合があります
               </p>
-               <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-gray-500 mt-2">
                 ※撮影編集代行50,000円
               </p>
+            </div>
+
+            <div className="text-center mt-6">
+              <a
+                href="/contact"
+                className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-md shadow hover:opacity-90 transition"
+              >
+                この価格で導入したい方はこちら →
+              </a>
             </div>
 
             {/* 安さの理由 */}
@@ -209,6 +236,37 @@ export default function GuidePage() {
             <p className="text-lg font-medium">
               今だけのお得な価格で、あなたのお店をPageitで魅力的に発信してみませんか？
             </p>
+          </section>
+
+          {/* お客様の声 */}
+          <section className="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-6 md:p-10 mt-16 space-y-6">
+            <h2 className="text-2xl font-bold text-center">お客様の声</h2>
+            <div className="space-y-4">
+              <div className="border-l-4 border-blue-400 pl-4">
+                <p className="text-gray-800">
+                  「新商品の追加もその場でできて本当に便利。
+                  <br />
+                  スマホだけでここまでできるとは思いませんでした！」
+                </p>
+                <p className="text-sm text-gray-500 mt-1">― カフェ Y様</p>
+              </div>
+              <div className="border-l-4 border-pink-400 pl-4">
+                <p className="text-gray-800">
+                  「AIの紹介文機能に感動しました。
+                  <br />
+                  言葉にするのが苦手な自分には最高です。」
+                </p>
+                <p className="text-sm text-gray-500 mt-1">― ネイルサロン R様</p>
+              </div>
+              <div className="border-l-4 border-green-400 pl-4">
+                <p className="text-gray-800">
+                  「撮影からすべてお任せできて助かりました。
+                  <br />
+                  今ではお客さんから『見やすいね』とよく言われます。」
+                </p>
+                <p className="text-sm text-gray-500 mt-1">― 整骨院 K様</p>
+              </div>
+            </div>
           </section>
 
           <section className="bg-white/60 backdrop-blur-md rounded-xl shadow p-6 md:p-10 space-y-4 text-center">

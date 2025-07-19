@@ -97,6 +97,14 @@ export default function Home() {
               </div>
             </div>
           </section>
+          <div className="text-center mt-4">
+            <a
+              href="/contact"
+              className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-md shadow hover:opacity-90 transition"
+            >
+              まずは無料相談 →
+            </a>
+          </div>
         </div>
       </main>
     </>
