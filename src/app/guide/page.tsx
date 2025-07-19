@@ -181,6 +181,9 @@ export default function GuidePage() {
               <p className="text-sm text-gray-500 mt-2">
                 ※キャンペーンは予告なく終了する場合があります
               </p>
+               <p className="text-sm text-gray-500 mt-2">
+                ※撮影編集代行50,000円
+              </p>
             </div>
 
             {/* 安さの理由 */}
