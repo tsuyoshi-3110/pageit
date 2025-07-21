@@ -22,6 +22,9 @@ export default function Navbar() {
           <Link href="/contact" className="hover:underline">
             お問い合わせ
           </Link>
+          <Link href="/legal" className="hover:underline">
+            特定商取引法に基づく表記
+          </Link>
         </div>
 
         {/* ハンバーガー（スマホ） */}
@@ -61,6 +64,14 @@ export default function Navbar() {
             className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
           >
             お問い合わせ
+          </Link>
+
+          <Link
+            href="/legal"
+            onClick={() => setMenuOpen(false)}
+            className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
+          >
+            特定商取引法に基づく表記
           </Link>
         </div>
       )}
