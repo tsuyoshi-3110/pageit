@@ -179,20 +179,31 @@ export default function GuidePage() {
                 （税別）
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                {/* 自己撮影プラン */}
                 <div className="border p-4 rounded shadow">
-                  <h3 className="font-bold text-blue-700">自己撮影プラン</h3>
-                  <p>
-                    初期費用：30,000円
+                  <h3 className="font-bold text-blue-700">📸 自己撮影プラン</h3>
+                  <p className="mt-2 text-sm text-gray-600">
+                    お客様ご自身で動画や画像などの素材をご用意いただき、弊社にお渡しいただくプランです。
+                    撮影や編集は含まれておらず、コストを抑えたい方におすすめです。
+                  </p>
+                  <p className="mt-4">
+                    初期費用：<strong>30,000円</strong>
                     <br />
-                    月額：1,500円
+                    月額：<strong>1,500円</strong>
                   </p>
                 </div>
+
+                {/* おまかせプラン */}
                 <div className="border p-4 rounded shadow bg-blue-50">
-                  <h3 className="font-bold text-pink-700">おまかせプラン</h3>
-                  <p>
-                    初期費用：80,000円（撮影＋編集込み）
+                  <h3 className="font-bold text-pink-700">🎥 おまかせプラン</h3>
+                  <p className="mt-2 text-sm text-gray-600">
+                    弊社スタッフが直接訪問し、トップ動画・画像・商品写真などを撮影。
+                    編集・セットアップまでを一括でお任せいただける安心プランです。
+                  </p>
+                  <p className="mt-4">
+                    初期費用：<strong>80,000円</strong>（撮影＋編集込み）
                     <br />
-                    月額：1,500円
+                    月額：<strong>1,500円</strong>
                   </p>
                 </div>
               </div>

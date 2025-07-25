@@ -63,6 +63,9 @@ export default function Home() {
             <p className="text-lg text-gray-700 max-w-xl mx-auto">
               Pageit（ページット）は、SNS世代のために設計された、動画×スマホ×AI対応のホームページサービスです。
             </p>
+            <p className="text-base text-gray-600">
+              これからの時代、ホームページは“作って終わり”ではなく、“育てていく”ものです。
+            </p>
           </section>
 
           {/* 特長 */}
@@ -73,7 +76,9 @@ export default function Home() {
             <div className="grid gap-6 sm:grid-cols-2">
               <div className="p-6 rounded-xl shadow-lg bg-transparent backdrop-blur-sm ">
                 <h3 className="font-bold text-lg mb-2">📱 スマホで簡単編集</h3>
-                <p>PC不要。メニューやお知らせもその場で更新できます。</p>
+                <p>
+                  PC不要。メニューやお知らせもその場で更新できます。インスタのような使い心地！
+                </p>
               </div>
               <div className="p-6 rounded-xl shadow-lg bg-transparent backdrop-blur-sm">
                 <h3 className="font-bold text-lg mb-2">
@@ -94,6 +99,10 @@ export default function Home() {
                 <p>
                   動画や画像を何度でも自由に変更でき、常に“今”の情報を発信。
                 </p>
+              </div>
+              <div className="p-6 rounded-xl shadow-lg bg-transparent backdrop-blur-sm">
+                <h3 className="font-bold text-lg mb-2">🔍 SEO対策もバッチリ</h3>
+                <p>スマホ対応・高速表示・OGP設定など、検索に強い構造です。</p>
               </div>
             </div>
           </section>
