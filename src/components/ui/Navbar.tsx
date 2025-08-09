@@ -22,6 +22,12 @@ export default function Navbar() {
           <Link href="/contact" className="hover:underline">
             お問い合わせ
           </Link>
+          <Link href="/referral" className="hover:underline">
+            紹介制度
+          </Link>
+          <Link href="/partners" className="hover:underline">
+            パートナー募集
+          </Link>
           <Link href="/legal" className="hover:underline">
             特定商取引法に基づく表記
           </Link>
@@ -64,6 +70,22 @@ export default function Navbar() {
             className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
           >
             お問い合わせ
+          </Link>
+
+          <Link
+            href="/referral"
+            onClick={() => setMenuOpen(false)}
+            className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
+          >
+            紹介制度
+          </Link>
+
+          <Link
+            href="/partners"
+            onClick={() => setMenuOpen(false)}
+            className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
+          >
+            パートナー募集
           </Link>
 
           <Link
