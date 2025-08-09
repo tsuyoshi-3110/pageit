@@ -42,24 +42,64 @@ export default function PartnersClient() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300">
       <div className="max-w-5xl mx-auto px-6 py-14 text-gray-900">
-        {/* Header */}
-        <header className="text-center space-y-3 mb-10">
+        {/* ===== ヒーロー：報酬を最強に訴求 ===== */}
+        <header className="text-center space-y-4 mb-12">
           <h1 className="text-3xl sm:text-4xl font-extrabold">
             撮影・編集代行パートナー募集
           </h1>
           <p className="text-gray-800">
             店舗・サロン向けの写真/動画撮影と簡単編集をお任せできる方を募集しています。
           </p>
+
+          {/* 目立つ報酬バッジ */}
+          <div className="relative inline-flex items-center">
+            <span
+              className="absolute -inset-1 rounded-full blur-lg opacity-70 bg-gradient-to-r from-yellow-300 via-orange-400 to-pink-500"
+              aria-hidden
+            />
+            <div className="relative rounded-full px-3 py-2 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white font-extrabold shadow-lg">
+              <span className="align-middle mr-2">💰</span>
+              <span className="align-middle">報酬</span>
+              <span className="align-middle text-xl sm:text-xl ml-2">
+                ¥35,000
+              </span>
+              <span className="ml-2 text-xs font-bold bg-white/20 px-2 py-1 rounded-full align-middle">
+                撮影のみ
+              </span>
+            </div>
+          </div>
+
+          {/* 追加の強調行 */}
+          <div className="mt-2 text-sm sm:text-lg font-bold text-center">
+            <span className="inline-block bg-gradient-to-r from-pink-500 to-purple-600 to-red-500 text-white px-4 py-2 rounded-full shadow-lg ">
+              撮影＋編集なら <b className="text-xl">¥50,000</b>
+            </span>
+          </div>
         </header>
 
-        {/* 募集要項カード */}
-        <section className="rounded-2xl bg-white/70 backdrop-blur p-6 shadow mb-10">
-          <h2 className="text-xl font-bold mb-2">募集要項</h2>
+        {/* ===== 募集要項カード（報酬を再強調） ===== */}
+        <section className="relative rounded-2xl bg-white/70 backdrop-blur p-6 shadow mb-10">
+          {/* リボン */}
+          <div className="absolute -top-3 -left-3">
+            <div className="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-bold px-3 py-1 rounded-md shadow">
+              高単価
+            </div>
+          </div>
+
+          <h2 className="text-xl font-bold mb-3">募集要項</h2>
           <ul className="list-disc pl-5 space-y-1 text-sm">
             <li>内容：店舗・サロンの写真/動画の撮影と簡単編集</li>
-            <li>
-              報酬目安：撮影のみ<strong>¥35,000</strong>、撮影＋編集
-              <strong>¥50,000</strong>（交通費別）
+            <li className="space-x-2">
+              <span>報酬目安：</span>
+              <span className="inline-flex items-center gap-2">
+                <span className="rounded-full px-3 py-1 text-xs font-bold text-white bg-gradient-to-r from-amber-500 to-rose-500 shadow-sm">
+                  撮影のみ ¥35,000〜
+                </span>
+                <span className="rounded-full px-3 py-1 text-xs font-bold text-white bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-sm">
+                  撮影＋編集 ¥50,000〜
+                </span>
+                <span className="text-gray-600 text-xs">(交通費別)</span>
+              </span>
             </li>
             <li>
               要件：一眼レフ or 高性能スマホの撮影経験、基本的な動画編集スキル
@@ -68,7 +108,7 @@ export default function PartnersClient() {
           </ul>
         </section>
 
-        {/* 応募フォーム */}
+        {/* ===== 応募フォーム ===== */}
         <section className="rounded-2xl bg-white/80 backdrop-blur p-6 shadow">
           <h2 className="text-xl font-bold mb-4">パートナー 応募フォーム</h2>
           <form className="space-y-4" onSubmit={submitPro}>
@@ -140,7 +180,7 @@ export default function PartnersClient() {
           </form>
         </section>
 
-        {/* FAQ */}
+        {/* ===== FAQ ===== */}
         <section className="mt-10 rounded-2xl bg-white/60 backdrop-blur p-6 shadow">
           <h3 className="text-lg font-bold mb-3">よくある質問 / 注意事項</h3>
           <ul className="list-disc pl-5 space-y-1 text-sm">

@@ -14,38 +14,19 @@ export default function Navbar() {
           Pageit
         </Link>
 
-        {/* PCメニュー */}
-        <div className="hidden md:flex space-x-6 text-white font-medium">
-          <Link href="/guide" className="hover:underline">
-            ご案内
-          </Link>
-          <Link href="/contact" className="hover:underline">
-            お問い合わせ
-          </Link>
-          <Link href="/referral" className="hover:underline">
-            紹介制度
-          </Link>
-          <Link href="/partners" className="hover:underline">
-            パートナー募集
-          </Link>
-          <Link href="/legal" className="hover:underline">
-            特定商取引法に基づく表記
-          </Link>
-        </div>
-
-        {/* ハンバーガー（スマホ） */}
+        {/* ハンバーガー（全デバイス） */}
         <button
-          className="md:hidden text-white"
+          className="text-white"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          {menuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
-      {/* スマホ用ドロワー */}
+      {/* ドロワー（全デバイス共通） */}
       {menuOpen && (
-        <div className="fixed top-0 right-0 w-3/4 h-full z-40 bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 shadow-lg animate-slide-in-right rounded-l-xl flex flex-col items-center justify-center space-y-6 md:hidden">
+        <div className="fixed top-0 right-0 w-3/4 sm:w-1/3 h-full z-40 bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 shadow-lg animate-slide-in-right rounded-l-xl flex flex-col items-center justify-center space-y-6">
           {/* ✖ 閉じるボタン */}
           <button
             onClick={() => setMenuOpen(false)}
@@ -77,7 +58,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
             className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
           >
-            紹介制度
+            ご紹介プログラム
           </Link>
 
           <Link
