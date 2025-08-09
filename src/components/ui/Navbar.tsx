@@ -50,7 +50,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
             className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
           >
-            モニター募集
+            モニターサイト一覧
           </Link>
 
           <Link
