@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Head from "next/head";
+import { useState } from "react"; // 追加
 
 type GuideSection = {
   image: string;
@@ -45,6 +46,14 @@ const sections: GuideSection[] = [
 ];
 
 export default function GuidePage() {
+  // ▼ 縦長動画に合わせて表示比率を自動調整
+  const [videoMeta, setVideoMeta] = useState({
+    w: 9,
+    h: 16,
+    portrait: true,
+    ready: false,
+  });
+
   return (
     <>
       <Head>
@@ -76,6 +85,55 @@ export default function GuidePage() {
       </Head>
 
       <main className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 py-16 px-4">
+        {/* ▼▼ トップ：動画ヒーロー（縦長に最適化） ▼▼ */}
+        <section className="max-w-5xl mx-auto mb-16">
+          <div
+            className={[
+              "relative mx-auto rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/40 bg-black",
+              // 縦長動画は横幅を絞って見やすく（スマホ想定）
+              videoMeta.portrait ? "max-w-[420px]" : "max-w-5xl",
+            ].join(" ")}
+            style={{
+              // 実動画のアスペクト比にフィット
+              aspectRatio: `${videoMeta.w} / ${videoMeta.h}`,
+            }}
+          >
+            {/* やわらかい光彩 */}
+            <div className="pointer-events-none absolute -inset-8 bg-gradient-to-r from-white/10 via-transparent to-white/10 blur-2xl" />
+
+            {/* 動画本体 */}
+            <video
+              src="/setumeiMovie.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              onLoadedMetadata={(e) => {
+                const v = e.currentTarget;
+                const w = v.videoWidth || 9;
+                const h = v.videoHeight || 16;
+                setVideoMeta({
+                  w,
+                  h,
+                  portrait: h >= w,
+                  ready: true,
+                });
+              }}
+              className={[
+                "absolute inset-0 h-full w-full",
+                // 縦長は全体表示（黒帯許容）、横長はヒーロー感を優先
+                videoMeta.portrait ? "object-contain" : "object-cover",
+              ].join(" ")}
+              aria-label="Pageit 紹介動画"
+            />
+
+            {/* 枠のハイライト */}
+            <div className="pointer-events-none absolute inset-0 ring-1 ring-white/20 rounded-2xl" />
+          </div>
+        </section>
+        {/* ▲▲ トップ：動画ヒーロー（縦長に最適化） ▲▲ */}
+
         <div className="max-w-5xl mx-auto space-y-16">
           {/* 導入紹介 */}
           <section className="text-center text-gray-800 space-y-4">
