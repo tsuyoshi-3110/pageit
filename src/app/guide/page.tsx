@@ -87,19 +87,26 @@ export default function GuidePage() {
       <main className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 py-16 px-4">
         {/* ▼▼ トップ：動画ヒーロー（縦長に最適化） ▼▼ */}
         <section className="max-w-5xl mx-auto mb-16">
+            {/* 導入紹介 */}
+          <section className="text-center text-gray-800 space-y-4 mb-10">
+            <h1 className="text-4xl font-bold">Pageit ご案内</h1>
+            <p className="text-lg max-w-3xl mx-auto">
+              Pageit（ページット）は、動画・スマホ・AIを活用し、誰でも簡単にホームページを編集・運用できるサービスです。
+              スマホだけで更新でき、トップに動画を配置できるなど、SNS時代の集客にぴったりです。
+            </p>
+          </section>
+
           <div
             className={[
               "relative mx-auto rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/40 bg-black",
-              // 縦長動画は横幅を絞って見やすく（スマホ想定）
-              videoMeta.portrait ? "max-w-[420px]" : "max-w-5xl",
+              videoMeta.portrait ? "max-w-[260px]" : "max-w-xl", // ← 枠をさらに小さく
             ].join(" ")}
             style={{
-              // 実動画のアスペクト比にフィット
-              aspectRatio: `${videoMeta.w} / ${videoMeta.h}`,
+              aspectRatio: `${videoMeta.w} / ${videoMeta.h}`, // 動画比率で枠も変わる
             }}
           >
             {/* やわらかい光彩 */}
-            <div className="pointer-events-none absolute -inset-8 bg-gradient-to-r from-white/10 via-transparent to-white/10 blur-2xl" />
+            <div className="pointer-events-none absolute -inset-6 bg-gradient-to-r from-white/10 via-transparent to-white/10 blur-2xl" />
 
             {/* 動画本体 */}
             <video
@@ -121,8 +128,7 @@ export default function GuidePage() {
                 });
               }}
               className={[
-                "absolute inset-0 h-full w-full",
-                // 縦長は全体表示（黒帯許容）、横長はヒーロー感を優先
+                "absolute inset-0 h-full w-full", // 枠にフィット
                 videoMeta.portrait ? "object-contain" : "object-cover",
               ].join(" ")}
               aria-label="Pageit 紹介動画"
@@ -135,14 +141,7 @@ export default function GuidePage() {
         {/* ▲▲ トップ：動画ヒーロー（縦長に最適化） ▲▲ */}
 
         <div className="max-w-5xl mx-auto space-y-16">
-          {/* 導入紹介 */}
-          <section className="text-center text-gray-800 space-y-4">
-            <h1 className="text-4xl font-bold">Pageit ご案内</h1>
-            <p className="text-lg max-w-3xl mx-auto">
-              Pageit（ページット）は、動画・スマホ・AIを活用し、誰でも簡単にホームページを編集・運用できるサービスです。
-              スマホだけで更新でき、トップに動画を配置できるなど、SNS時代の集客にぴったりです。
-            </p>
-          </section>
+
 
           {/* 各機能セクション */}
           {sections.map((section, index) => (

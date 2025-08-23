@@ -1,4 +1,4 @@
-// src/app/referral/ReferralClient.tsx
+// src/components/ReferralClient.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -18,7 +18,6 @@ type BankStore = {
 const LS_KEY_REFERRER = "pageit_referral_referrer";
 const LS_KEY_BANK = "pageit_referral_bank";
 
-// 業種候補
 const INDUSTRY_OPTIONS = [
   "飲食店",
   "カフェ・ベーカリー",
@@ -34,22 +33,44 @@ const INDUSTRY_OPTIONS = [
   "その他",
 ] as const;
 
-// 全角→半角数字
 const toHalfWidthDigits = (s: string) =>
   s.replace(/[０-９]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0xfee0));
-// 各種ハイフン類
 const HYPHENS = /[‐\-‒–—ー－]/g;
+
+function SectionHeader({
+  step,
+  title,
+  subtitle,
+}: {
+  step: number | string;
+  title: string;
+  subtitle?: string;
+}) {
+  return (
+    <div className="flex items-start gap-3 mb-4">
+      <span className="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full bg-gray-900 text-white text-sm font-bold">
+        {step}
+      </span>
+      <div>
+        <h2 className="text-lg sm:text-xl font-bold">{title}</h2>
+        {subtitle && <p className="text-sm text-gray-600 mt-0.5">{subtitle}</p>}
+      </div>
+    </div>
+  );
+}
 
 export default function ReferralClient() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState<string | null>(null);
   const [remember, setRemember] = useState(true);
 
-  // 紹介者・銀行（保存対象）
+  // 紹介者（保存対象）
   const [referrer, setReferrer] = useState<ReferrerStore>({
     referrerName: "",
     email: "",
   });
+
+  // 紹介者：振込先
   const [bank, setBank] = useState<BankStore>({
     bankName: "",
     branchName: "",
@@ -58,20 +79,23 @@ export default function ReferralClient() {
     accountHolderKana: "",
   });
 
-  // 業種
+  // 紹介先：業種
   const [industry, setIndustry] = useState<string>("");
   const [industryOther, setIndustryOther] = useState<string>("");
   const isOther = industry === "その他";
 
-  // 住所オートフィル
-  const [zip, setZip] = useState(""); // 表示用（自動で 123-4567 に整形）
-  const [address, setAddress] = useState(""); // 自動入力 & 手編集OK
+  // 紹介先：住所オートフィル
+  const [zip, setZip] = useState<string>(""); // controlled を維持
+  const [address, setAddress] = useState<string>(""); // controlled を維持
   const [zipStatus, setZipStatus] = useState<
     "idle" | "searching" | "found" | "notfound" | "error"
   >("idle");
 
-  // 電話番号（表示は自動整形。常にJPルールで AsYouType）
-  const [phone, setPhone] = useState("");
+  // 紹介先：電話
+  const [phone, setPhone] = useState<string>("");
+
+  // 任意リンク（最大3件）
+  const [links, setLinks] = useState<string[]>([""]);
 
   // 初期ロード：localStorage復元
   useEffect(() => {
@@ -88,22 +112,20 @@ export default function ReferralClient() {
 
   // 郵便番号入力ハンドラ（全角→半角、ハイフン自動付与 123-4567）
   function handleZipChange(v: string) {
-    // 全角→半角、ハイフン類除去
     const digitsOnly = toHalfWidthDigits(v)
       .replace(HYPHENS, "")
       .replace(/\D/g, "")
       .slice(0, 7);
-    // 表示は 123-4567 に整形（3桁超えたらハイフン）
     const pretty =
       digitsOnly.length > 3
         ? `${digitsOnly.slice(0, 3)}-${digitsOnly.slice(3)}`
         : digitsOnly;
-    setZip(pretty);
+    setZip(pretty ?? ""); // 常に string
   }
 
   // 7桁になったらZipCloudへ問い合わせ（400msデバウンス）
   useEffect(() => {
-    const digits = toHalfWidthDigits(zip)
+    const digits = toHalfWidthDigits(zip ?? "")
       .replace(HYPHENS, "")
       .replace(/\D/g, "");
     if (digits.length !== 7) {
@@ -128,7 +150,9 @@ export default function ReferralClient() {
         } = await res.json();
         if (json.status === 200 && json.results && json.results.length > 0) {
           const r = json.results[0];
-          setAddress(`${r.address1}${r.address2}${r.address3}`);
+          setAddress(
+            [r.address1, r.address2, r.address3].filter(Boolean).join("")
+          );
           setZipStatus("found");
         } else {
           setZipStatus("notfound");
@@ -143,8 +167,20 @@ export default function ReferralClient() {
   // 電話番号入力ハンドラ（AsYouTypeで逐次整形）
   function handlePhoneChange(v: string) {
     const formatter = new AsYouType("JP");
-    setPhone(formatter.input(v));
+    setPhone(formatter.input(v) ?? "");
   }
+
+  // 任意リンクの行操作
+  const canAddLink = links.length < 3;
+  const addLinkRow = () => {
+    if (canAddLink) setLinks((arr) => [...arr, ""]);
+  };
+  const removeLinkRow = (idx: number) => {
+    setLinks((arr) => arr.filter((_, i) => i !== idx));
+  };
+  const updateLink = (idx: number, v: string) => {
+    setLinks((arr) => arr.map((s, i) => (i === idx ? v : s)));
+  };
 
   // 送信
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -158,15 +194,25 @@ export default function ReferralClient() {
     // 明示セット（業種、フォーマット済み値）
     fd.set("type", "referral");
     fd.set("payout", "bank");
-    fd.set("industry", industry);
-    if (isOther) fd.set("industryOther", industryOther);
+    fd.set("industry", industry ?? "");
+    if (isOther) fd.set("industryOther", industryOther ?? "");
 
     // 郵便番号はハイフン付きで送る（API側で受け入れ済）
-    fd.set("zip", zip);
+    fd.set("zip", zip ?? "");
 
     // 電話番号：E.164も試す（失敗時は整形済の表示値）
-    const parsed = parsePhoneNumberFromString(phone, "JP");
-    fd.set("phone", parsed?.number ?? phone);
+    const parsed = parsePhoneNumberFromString(phone ?? "", "JP");
+    fd.set("phone", parsed?.number ?? phone ?? "");
+
+    // リンクは空行を除去して詰め直す（最大3件）
+    fd.delete("links");
+    let count = 0;
+    for (const u of links.map((s) => (s ?? "").trim())) {
+      if (!u) continue;
+      fd.append("links", u);
+      count++;
+      if (count >= 3) break;
+    }
 
     try {
       const res = await fetch("/api/referral", { method: "POST", body: fd });
@@ -177,12 +223,14 @@ export default function ReferralClient() {
           localStorage.setItem(LS_KEY_REFERRER, JSON.stringify(referrer));
           localStorage.setItem(LS_KEY_BANK, JSON.stringify(bank));
         }
+        // reset（controlledは手動で初期化）
         form.reset();
         setIndustry("");
         setIndustryOther("");
         setZip("");
         setAddress("");
         setPhone("");
+        setLinks([""]);
       } else {
         setDone(
           json.message || "送信に失敗しました。時間をおいて再度お試しください。"
@@ -195,7 +243,6 @@ export default function ReferralClient() {
     }
   }
 
-  // 電話の入力補助（placeholder）
   const phonePlaceholder = useMemo(
     () => "例：090 1234 5678 / 03-1234-5678",
     []
@@ -204,20 +251,19 @@ export default function ReferralClient() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300">
       <div className="max-w-3xl mx-auto px-6 py-14 text-gray-900">
+        {/* ヘッダー */}
         <header className="text-center space-y-3 mb-10">
           <h1 className="text-3xl sm:text-4xl font-extrabold">紹介制度</h1>
           <p className="text-gray-800 text-lg">
             ご紹介先が有料プランをご成約（初回決済完了）で、
           </p>
-
-          {/* ★ 強調エリア */}
           <div className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white font-extrabold text-xl shadow-lg animate-bounce">
             報酬 <span className="text-xl">1万円</span>!!
           </div>
-
           <p className="text-gray-800 text-lg">紹介者にお支払いします</p>
         </header>
 
+        {/* ルール */}
         <div className="rounded-2xl bg-white/70 backdrop-blur p-6 shadow mb-10">
           <h2 className="text-xl font-bold mb-2">
             👥 紹介制度（ご成約で1万円）
@@ -228,8 +274,8 @@ export default function ReferralClient() {
               （既存・過去問い合わせ済みは対象外）
             </li>
             <li>
-              お支払い：成約確認・弊社入金確認・クーリングオフ期間経過後、原則
-              <strong>7日以内</strong>にお振り込み
+              お支払い：成約確認・弊社入金確認・クーリングオフ期間経過後、原則{" "}
+              <strong>7日以内</strong> にお振り込み
             </li>
             <li>複数件OK：成約件数分お支払い</li>
           </ul>
@@ -238,317 +284,391 @@ export default function ReferralClient() {
           </p>
         </div>
 
-        {/* 紹介フォーム */}
+        {/* フォーム本体 */}
         <section className="rounded-2xl bg-white/80 backdrop-blur p-6 shadow">
-          <h2 className="text-xl font-bold mb-4">紹介申込みフォーム</h2>
+          <form className="space-y-8" onSubmit={onSubmit}>
+            {/* --- セクション1：紹介者情報（あなた） --- */}
+            <div className="border border-gray-200 rounded-xl p-4 sm:p-5 bg-white/90">
+              <SectionHeader
+                step={1}
+                title="紹介者情報（あなた）"
+                subtitle="報酬の振込先もこちらに入力してください。"
+              />
 
-          <form className="space-y-4" onSubmit={onSubmit}>
-            {/* 紹介者（自動入力） */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold mb-1">
-                  紹介者名 *
-                </label>
-                <input
-                  name="referrerName"
-                  required
-                  className="w-full rounded-md border px-3 py-2"
-                  placeholder="例：山田 太郎"
-                  value={referrer.referrerName}
-                  onChange={(e) =>
-                    setReferrer((s) => ({ ...s, referrerName: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-1">
-                  紹介者メールアドレス *
-                </label>
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  className="w-full rounded-md border px-3 py-2"
-                  placeholder="you@example.com"
-                  value={referrer.email}
-                  onChange={(e) =>
-                    setReferrer((s) => ({ ...s, email: e.target.value }))
-                  }
-                />
-              </div>
-            </div>
-
-            {/* 紹介先 */}
-            <p className="text-lg font-semibold text-gray-700 mt-5">
-              紹介先情報
-            </p>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm mb-1">お店の名前 *</label>
-                <input
-                  name="shopName"
-                  required
-                  className="w-full rounded-md border px-3 py-2"
-                  placeholder="例：甘味処 よって屋"
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-1">氏名（オーナー） *</label>
-                <input
-                  name="ownerName"
-                  required
-                  className="w-full rounded-md border px-3 py-2"
-                  placeholder="例：斎藤 一郎"
-                />
-              </div>
-            </div>
-
-            {/* 業種 */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm mb-1">業種 *</label>
-                <select
-                  name="industry"
-                  required
-                  className="w-full rounded-md border px-3 py-2"
-                  value={industry}
-                  onChange={(e) => setIndustry(e.target.value)}
-                >
-                  <option value="">選択してください</option>
-                  {INDUSTRY_OPTIONS.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {isOther && (
+              {/* 基本 */}
+              <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm mb-1">
-                    業種（自由記入）*
+                  <label className="block text-sm font-semibold mb-1">
+                    紹介者名 *
                   </label>
                   <input
-                    name="industryOther"
+                    name="referrerName"
                     required
                     className="w-full rounded-md border px-3 py-2"
-                    placeholder="例：ペットサロン など具体的に"
-                    value={industryOther}
-                    onChange={(e) => setIndustryOther(e.target.value)}
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* 連絡先 */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm mb-1">
-                  紹介先メールアドレス *
-                </label>
-                <input
-                  name="leadEmail"
-                  type="email"
-                  required
-                  className="w-full rounded-md border px-3 py-2"
-                  placeholder="owner@example.com"
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-1">電話番号 *</label>
-                <input
-                  name="phone_display" // 表示用（送信時に 'phone' に差し替え）
-                  required
-                  className="w-full rounded-md border px-3 py-2"
-                  placeholder={phonePlaceholder}
-                  value={phone}
-                  onChange={(e) => handlePhoneChange(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* 住所 */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm mb-1">郵便番号 *</label>
-                <input
-                  name="zip_display" // 表示用（送信時に 'zip' に差し替え）
-                  required
-                  inputMode="numeric"
-                  autoComplete="postal-code"
-                  className="w-full rounded-md border px-3 py-2"
-                  placeholder="例：123-4567"
-                  value={zip}
-                  onChange={(e) => handleZipChange(e.target.value)}
-                />
-                {zipStatus === "searching" && (
-                  <p className="text-xs text-gray-600 mt-1">住所を検索中…</p>
-                )}
-                {zipStatus === "notfound" && (
-                  <p className="text-xs text-red-600 mt-1">
-                    該当住所が見つかりませんでした。
-                  </p>
-                )}
-                {zipStatus === "error" && (
-                  <p className="text-xs text-red-600 mt-1">
-                    住所の自動取得に失敗しました。手入力してください。
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm mb-1">住所 *</label>
-                <input
-                  name="address"
-                  required
-                  className="w-full rounded-md border px-3 py-2"
-                  placeholder="例：東京都〇〇区1-2-3"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-                {zipStatus === "found" && (
-                  <p className="text-xs text-green-700 mt-1">
-                    郵便番号から自動入力しました。番地・建物名はご確認の上、追記してください。
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* 振込先 */}
-            <div className="mt-2">
-              <p className="text-lg font-semibold text-gray-700 mt-5">
-                振込先口座
-              </p>
-              <div className="grid sm:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm mb-1">銀行名 *</label>
-                  <input
-                    name="bankName"
-                    required
-                    className="w-full rounded-md border px-3 py-2"
-                    placeholder="例：三菱UFJ銀行"
-                    value={bank.bankName}
+                    placeholder="例：山田 太郎"
+                    value={referrer.referrerName ?? ""}
                     onChange={(e) =>
-                      setBank((s) => ({ ...s, bankName: e.target.value }))
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">支店名 *</label>
-                  <input
-                    name="branchName"
-                    required
-                    className="w-full rounded-md border px-3 py-2"
-                    placeholder="例：渋谷支店"
-                    value={bank.branchName}
-                    onChange={(e) =>
-                      setBank((s) => ({ ...s, branchName: e.target.value }))
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-3 gap-4 mt-2">
-                <div>
-                  <label className="block text-sm mb-1">口座種別 *</label>
-                  <select
-                    name="accountType"
-                    required
-                    className="w-full rounded-md border px-3 py-2"
-                    value={bank.accountType}
-                    onChange={(e) =>
-                      setBank((s) => ({
+                      setReferrer((s) => ({
                         ...s,
-                        accountType: e.target.value as BankStore["accountType"],
+                        referrerName: e.target.value,
                       }))
                     }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-1">
+                    紹介者メールアドレス *
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    className="w-full rounded-md border px-3 py-2"
+                    placeholder="you@example.com"
+                    value={referrer.email ?? ""}
+                    onChange={(e) =>
+                      setReferrer((s) => ({ ...s, email: e.target.value }))
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* 振込先 */}
+              <div className="mt-5">
+                <p className="text-base font-semibold text-gray-800">
+                  振込先口座
+                </p>
+                <div className="grid sm:grid-cols-2 gap-4 mt-3">
+                  <div>
+                    <label className="block text-sm mb-1">銀行名 *</label>
+                    <input
+                      name="bankName"
+                      required
+                      className="w-full rounded-md border px-3 py-2"
+                      placeholder="例：三菱UFJ銀行"
+                      value={bank.bankName ?? ""}
+                      onChange={(e) =>
+                        setBank((s) => ({ ...s, bankName: e.target.value }))
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">支店名 *</label>
+                    <input
+                      name="branchName"
+                      required
+                      className="w-full rounded-md border px-3 py-2"
+                      placeholder="例：渋谷支店"
+                      value={bank.branchName ?? ""}
+                      onChange={(e) =>
+                        setBank((s) => ({ ...s, branchName: e.target.value }))
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-3 gap-4 mt-2">
+                  <div>
+                    <label className="block text-sm mb-1">口座種別 *</label>
+                    <select
+                      name="accountType"
+                      required
+                      className="w-full rounded-md border px-3 py-2"
+                      value={bank.accountType ?? "普通"}
+                      onChange={(e) =>
+                        setBank((s) => ({
+                          ...s,
+                          accountType: e.target
+                            .value as BankStore["accountType"],
+                        }))
+                      }
+                    >
+                      <option value="普通">普通</option>
+                      <option value="当座">当座</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">口座番号 *</label>
+                    <input
+                      name="accountNumber"
+                      inputMode="numeric"
+                      pattern="^[0-9]{6,12}$"
+                      required
+                      className="w-full rounded-md border px-3 py-2"
+                      placeholder="例：1234567"
+                      value={bank.accountNumber ?? ""}
+                      onChange={(e) =>
+                        setBank((s) => ({
+                          ...s,
+                          accountNumber: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">
+                      口座名義（カナ）*
+                    </label>
+                    <input
+                      name="accountHolderKana"
+                      required
+                      className="w-full rounded-md border px-3 py-2"
+                      placeholder="例：ヤマダ タロウ"
+                      value={bank.accountHolderKana ?? ""}
+                      onChange={(e) =>
+                        setBank((s) => ({
+                          ...s,
+                          accountHolderKana: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* --- セクション2：紹介先情報（お店） --- */}
+            <div className="border border-gray-200 rounded-xl p-4 sm:p-5 bg-white/90">
+              <SectionHeader
+                step={2}
+                title="紹介先情報（お店）"
+                subtitle="お店の基本情報・連絡先・住所を入力してください。"
+              />
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm mb-1">お店の名前 *</label>
+                  <input
+                    name="shopName"
+                    required
+                    className="w-full rounded-md border px-3 py-2"
+                    placeholder="例：甘味処 よって屋"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">
+                    氏名（オーナー） *
+                  </label>
+                  <input
+                    name="ownerName"
+                    required
+                    className="w-full rounded-md border px-3 py-2"
+                    placeholder="例：斎藤 一郎"
+                  />
+                </div>
+              </div>
+
+              {/* 業種 */}
+              <div className="grid sm:grid-cols-2 gap-4 mt-2">
+                <div>
+                  <label className="block text-sm mb-1">業種 *</label>
+                  <select
+                    name="industry"
+                    required
+                    className="w-full rounded-md border px-3 py-2"
+                    value={industry ?? ""}
+                    onChange={(e) => setIndustry(e.target.value)}
                   >
-                    <option value="普通">普通</option>
-                    <option value="当座">当座</option>
+                    <option value="">選択してください</option>
+                    {INDUSTRY_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
                   </select>
                 </div>
+                {isOther && (
+                  <div>
+                    <label className="block text-sm mb-1">
+                      業種（自由記入）*
+                    </label>
+                    <input
+                      name="industryOther"
+                      required
+                      className="w-full rounded-md border px-3 py-2"
+                      placeholder="例：ペットサロン など具体的に"
+                      value={industryOther ?? ""}
+                      onChange={(e) => setIndustryOther(e.target.value)}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* 連絡先 */}
+              <div className="grid sm:grid-cols-2 gap-4 mt-2">
                 <div>
-                  <label className="block text-sm mb-1">口座番号 *</label>
+                  <label className="block text-sm mb-1">
+                    紹介先メールアドレス *
+                  </label>
                   <input
-                    name="accountNumber"
-                    inputMode="numeric"
-                    pattern="^[0-9]{6,12}$"
+                    name="leadEmail"
+                    type="email"
                     required
                     className="w-full rounded-md border px-3 py-2"
-                    placeholder="例：1234567"
-                    value={bank.accountNumber}
-                    onChange={(e) =>
-                      setBank((s) => ({ ...s, accountNumber: e.target.value }))
-                    }
+                    placeholder="owner@example.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm mb-1">
-                    口座名義（カナ）*
-                  </label>
+                  <label className="block text-sm mb-1">電話番号 *</label>
                   <input
-                    name="accountHolderKana"
+                    name="phone_display" // 表示用（送信時に 'phone' に差し替え）
                     required
                     className="w-full rounded-md border px-3 py-2"
-                    placeholder="例：ヤマダ タロウ"
-                    value={bank.accountHolderKana}
-                    onChange={(e) =>
-                      setBank((s) => ({
-                        ...s,
-                        accountHolderKana: e.target.value,
-                      }))
-                    }
+                    placeholder={phonePlaceholder}
+                    value={phone ?? ""}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
                   />
                 </div>
               </div>
+
+              {/* 住所 */}
+              <div className="grid sm:grid-cols-2 gap-4 mt-2">
+                <div>
+                  <label className="block text-sm mb-1">郵便番号 *</label>
+                  <input
+                    name="zip_display" // 表示用（送信時に 'zip' に差し替え）
+                    required
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    className="w-full rounded-md border px-3 py-2"
+                    placeholder="例：123-4567"
+                    value={zip ?? ""}
+                    onChange={(e) => handleZipChange(e.target.value)}
+                  />
+                  {zipStatus === "searching" && (
+                    <p className="text-xs text-gray-600 mt-1">住所を検索中…</p>
+                  )}
+                  {zipStatus === "notfound" && (
+                    <p className="text-xs text-red-600 mt-1">
+                      該当住所が見つかりませんでした。
+                    </p>
+                  )}
+                  {zipStatus === "error" && (
+                    <p className="text-xs text-red-600 mt-1">
+                      住所の自動取得に失敗しました。手入力してください。
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm mb-1">住所 *</label>
+                  <input
+                    name="address"
+                    required
+                    className="w-full rounded-md border px-3 py-2"
+                    placeholder="例：東京都〇〇区1-2-3"
+                    value={address ?? ""}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                  {zipStatus === "found" && (
+                    <p className="text-xs text-green-700 mt-1">
+                      郵便番号から自動入力しました。番地・建物名はご確認の上、追記してください。
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* 任意リンク（最大3件） */}
+              <div className="mt-4">
+                <label className="block text-sm font-semibold mb-1">
+                  Webサイト / SNSリンク（任意・最大3件）」
+                </label>
+
+                <div className="space-y-2">
+                  {links.map((u, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <input
+                        name="links" // 同名で複数送信
+                        type="url"
+                        inputMode="url"
+                        pattern="https?://.+"
+                        className="w-full rounded-md border px-3 py-2"
+                        placeholder="例：https://example.com / https://instagram.com/..."
+                        value={u ?? ""}
+                        onChange={(e) => updateLink(idx, e.target.value)}
+                      />
+                      {links.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeLinkRow(idx)}
+                          className="px-2 py-2 rounded-md border text-sm hover:bg-gray-50"
+                          aria-label="この行を削除"
+                          title="この行を削除"
+                        >
+                          −
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    onClick={addLinkRow}
+                    disabled={!canAddLink}
+                    className="px-3 py-1.5 rounded-md border text-sm hover:bg-gray-50 disabled:opacity-50"
+                    title="行を追加"
+                  >
+                    ＋ 行を追加（残り {3 - links.length}）
+                  </button>
+                  <p className="text-xs text-gray-600 mt-1">
+                    http/https のURLのみ有効です。未入力の行は送信されません。
+                  </p>
+                </div>
+              </div>
+
+              {/* ロゴ画像（任意） */}
+              <div className="mt-4">
+                <label className="block text-sm font-semibold mb-1">
+                  ロゴ画像（任意）
+                </label>
+                <input
+                  name="logo"
+                  type="file"
+                  accept="image/*"
+                  className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-gray-900 file:text-white hover:file:opacity-90"
+                />
+                <p className="text-xs text-gray-600 mt-1">
+                  対応形式：PNG/JPG/SVG等・最大5MB程度推奨
+                </p>
+              </div>
+
+              {/* メモ（任意） */}
+              <div className="mt-4">
+                <label className="block text-sm font-semibold mb-1">
+                  メモ（任意）
+                </label>
+                <textarea
+                  name="memo"
+                  rows={3}
+                  className="w-full rounded-md border px-3 py-2"
+                  placeholder="補足があればご記入ください"
+                />
+              </div>
             </div>
 
-            {/* ロゴ画像（任意） */}
-            <div>
-              <label className="block text-sm font-semibold mb-1">
-                ロゴ画像（任意）
+            {/* 保存＆送信 */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={() => setRemember((v) => !v)}
+                />
+                この内容（紹介者・振込先）を次回も使う
               </label>
-              <input
-                name="logo"
-                type="file"
-                accept="image/*"
-                className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-gray-900 file:text-white hover:file:opacity-90"
-              />
-              <p className="text-xs text-gray-600 mt-1">
-                対応形式：PNG/JPG/SVG等・最大5MB程度推奨
-              </p>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="rounded-md bg-gray-900 text-white px-5 py-2.5 font-semibold hover:opacity-90 disabled:opacity-60"
+              >
+                {loading ? "送信中…" : "紹介を申し込む"}
+              </button>
             </div>
 
-            {/* メモ（任意） */}
-            <div>
-              <label className="block text-sm font-semibold mb-1">
-                メモ（任意）
-              </label>
-              <textarea
-                name="memo"
-                rows={3}
-                className="w-full rounded-md border px-3 py-2"
-                placeholder="補足があればご記入ください"
-              />
-            </div>
-
-            {/* 保存スイッチ */}
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={() => setRemember((v) => !v)}
-              />
-              この内容（紹介者・振込先）を次回も使う
-            </label>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-md bg-gray-900 text-white py-2.5 font-semibold hover:opacity-90 disabled:opacity-60"
-            >
-              {loading ? "送信中…" : "紹介を申し込む"}
-            </button>
-            {done && <p className="text-sm mt-2">{done}</p>}
+            {done && <p className="text-sm mt-1">{done}</p>}
           </form>
         </section>
 

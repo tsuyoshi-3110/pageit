@@ -23,6 +23,19 @@ function escapeHtml(s: string): string {
     .replaceAll('"', "&quot;");
 }
 
+// http/https のみ許可し、整形して返す（不正なら null）
+function sanitizeUrl(u: string): string | null {
+  try {
+    const url = new URL(u.trim());
+    if (url.protocol === "http:" || url.protocol === "https:") {
+      return url.toString();
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 async function getTransporter() {
   const oAuth2Client = new google.auth.OAuth2(
     GOOGLE_CLIENT_ID,
@@ -58,7 +71,7 @@ export async function POST(req: Request) {
 
     const fd = await req.formData();
 
-    // 必須（紹介者・紹介先・振込先）
+    // 必須
     const referrerName = String(fd.get("referrerName") ?? "");
     const email = String(fd.get("email") ?? "");
     const shopName = String(fd.get("shopName") ?? "");
@@ -73,17 +86,28 @@ export async function POST(req: Request) {
     const accountNumber = String(fd.get("accountNumber") ?? "");
     const accountHolderKana = String(fd.get("accountHolderKana") ?? "");
 
-    // ★ 追加：業種（その他のとき自由記入を要求）
+    // 業種（その他）
     const industry = String(fd.get("industry") ?? "");
     const industryOther = String(fd.get("industryOther") ?? "");
     const industryDisplay =
       industry === "その他" && industryOther
         ? `${industry}（${industryOther}）`
-        : industry || industryOther; // 念のためフォールバック
+        : industry || industryOther;
 
     // 任意
     const memo = String(fd.get("memo") ?? "");
     const logo = fd.get("logo") as File | null;
+
+    // 新規：任意リンク（同名 "links" を最大3件）
+    const rawLinks = fd.getAll("links") as Array<string | File>;
+    const links: string[] = [];
+    for (const v of rawLinks) {
+      const s = typeof v === "string" ? v : "";
+      if (!s) continue;
+      const safe = sanitizeUrl(s);
+      if (safe) links.push(safe);
+      if (links.length >= 3) break;
+    }
 
     // バリデーション
     const missing: string[] = [];
@@ -92,7 +116,7 @@ export async function POST(req: Request) {
       ["email", email],
       ["shopName", shopName],
       ["ownerName", ownerName],
-      ["industry", industry], // 業種自体は必須
+      ["industry", industry],
       ["leadEmail", leadEmail],
       ["phone", phone],
       ["zip", zip],
@@ -113,7 +137,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // メール本文（テーブル行）
+    // メール本文（テーブル部）
     const pairsForMail: Array<[string, string]> = [
       ["紹介者名", referrerName],
       ["紹介者メール", email],
@@ -142,10 +166,30 @@ export async function POST(req: Request) {
       )
       .join("");
 
+    // 任意リンクの HTML
+    const linksHtml =
+      links.length > 0
+        ? `
+        <div style="margin-top:12px;">
+          <b>関連リンク</b>
+          <ol style="margin:6px 0 0 20px;">
+            ${links
+              .map(
+                (u) =>
+                  `<li style="margin:4px 0;"><a href="${u}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+                    u
+                  )}</a></li>`
+              )
+              .join("")}
+          </ol>
+        </div>`
+        : "";
+
     const html = `
       <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;">
         <h2>【紹介申込み】</h2>
         <table style="border-collapse:collapse;border:1px solid #ddd;">${rowsHtml}</table>
+        ${linksHtml}
         ${
           memo
             ? `<p style="margin-top:12px;"><b>メモ:</b></p><pre style="white-space:pre-wrap;background:#f7f7f7;padding:10px;border-radius:6px;border:1px solid #eee;">${escapeHtml(

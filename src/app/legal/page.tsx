@@ -36,7 +36,7 @@ export default function LegalPage() {
           <strong>支払方法：</strong> クレジットカード決済（Stripe）
         </div>
         <div>
-          <strong>支払時期：</strong>{" "}
+          <strong>支払時期：</strong>
           初回申込時に初月分を請求。その後毎月自動課金。
         </div>
         <div>
