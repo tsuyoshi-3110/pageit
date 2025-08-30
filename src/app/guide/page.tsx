@@ -87,7 +87,7 @@ export default function GuidePage() {
       <main className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 py-16 px-4">
         {/* ▼▼ トップ：動画ヒーロー（縦長に最適化） ▼▼ */}
         <section className="max-w-5xl mx-auto mb-16">
-            {/* 導入紹介 */}
+          {/* 導入紹介 */}
           <section className="text-center text-gray-800 space-y-4 mb-10">
             <h1 className="text-4xl font-bold">Pageit ご案内</h1>
             <p className="text-lg max-w-3xl mx-auto">
@@ -141,8 +141,6 @@ export default function GuidePage() {
         {/* ▲▲ トップ：動画ヒーロー（縦長に最適化） ▲▲ */}
 
         <div className="max-w-5xl mx-auto space-y-16">
-
-
           {/* 各機能セクション */}
           {sections.map((section, index) => (
             <section
@@ -173,6 +171,7 @@ export default function GuidePage() {
             </section>
           ))}
 
+          {/* 課題訴求 */}
           <section className="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-6 md:p-10 space-y-4">
             <h2 className="text-2xl font-semibold">
               こんな経験はありませんか？
@@ -190,8 +189,19 @@ export default function GuidePage() {
             </ul>
 
             <p className="mt-4 text-gray-800">
-              私も同じ経験をしました。
-              そんな「もどかしい」状況を解決するために開発したのがPageitです。
+              私も同じ経験をしました。だからこそ、
+              <span className="font-semibold">
+                スマホ1つで即編集・即反映できる
+              </span>
+              「Pageit」を開発。さらに
+              <span className="font-semibold">
+                プロのカメラマンの撮影＆編集＋インフルエンサー監修
+              </span>
+              で“伝わる見せ方”を実現し、
+              <span className="font-semibold">
+                オーナー同士のネットワーク×AI協業提案
+              </span>
+              で集客面までバックアップします。
             </p>
           </section>
 
@@ -199,110 +209,104 @@ export default function GuidePage() {
           <section className="text-gray-800 text-center space-y-6 bg-white/70 backdrop-blur-md p-8 rounded-xl shadow-md">
             <h2 className="text-2xl font-bold">Pageitが選ばれる理由</h2>
             <ul className="list-disc list-inside text-left max-w-2xl mx-auto space-y-2">
-              <li>スマホひとつでいつでも編集、PCは不要</li>
-              <li>トップページに動画を使い、第一印象で差がつく</li>
-              <li>AIによる文章自動生成でライティング不要</li>
-              <li>テンプレートを使って即納品、スピード対応</li>
-              <li>月額制なのでコストも安心</li>
+              <li>スマホひとつでいつでも編集、PCは不要＆即反映</li>
+              <li>
+                トップページに<span className="font-semibold">動画</span>
+                、第一印象でしっかり差別化
+              </li>
+              <li>
+                <span className="font-semibold">AIが文章を自動生成</span>
+                、ライティングの手間を削減
+              </li>
+              <li>
+                <span className="font-semibold">
+                  プロ撮影＆編集＋インフルエンサー監修
+                </span>
+                で“映える”世界観に
+              </li>
+              <li>
+                <span className="font-semibold">
+                  オーナー同士のネットワーク × AI協業提案
+                </span>
+                で相互送客・共同企画を促進
+              </li>
+              <li>アクセス分析・SEO対策・OGPなど運用に強い設計</li>
+              <li>月額制でランニングも安心（必要なときだけ差し替えOK）</li>
             </ul>
 
-            {/* 料金 */}
+            {/* 料金（単一プランに統一） */}
+            {/* 料金（単一プラン） */}
+            {/* 料金（単一プラン） */}
             <div className="mt-6 bg-blue-50 p-4 rounded-md border border-blue-300 shadow-sm max-w-md mx-auto">
-              <p className="font-semibold text-lg text-blue-800">
-                導入料金（キャンペーン中）
-              </p>
-              <p className="text-gray-700">
-                <span className="font-bold">通常価格：</span>
-                <br />
-                初期費用：
-                <span className="line-through text-red-500">100,000円</span>
-                （税別）
-                <br />
-                月額費用：
-                <span className="line-through text-red-500">3,000円</span>
-                （税別）
-                <br />
-                <br />
-                <span className="font-bold text-blue-700">
-                  ▼ 今だけの実績づくりキャンペーン ▼
-                </span>
-                <br />
-                初期費用：
-                <span className="text-green-600 font-bold">30,000円</span>
-                （税別）
-                <br />
-                月額費用：
-                <span className="text-green-600 font-bold">1,500円</span>
-                （税別）
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                {/* 自己撮影プラン */}
-                <div className="border p-4 rounded shadow">
-                  <h3 className="font-bold text-blue-700">📸 自己撮影プラン</h3>
-                  <p className="mt-2 text-sm text-gray-600">
-                    お客様ご自身で動画や画像などの素材をご用意いただき、弊社にお渡しいただくプランです。
-                    撮影や編集は含まれておらず、コストを抑えたい方におすすめです。
-                  </p>
-                  <p className="mt-4">
-                    初期費用：<strong>30,000円</strong>
-                    <br />
-                    月額：<strong>1,500円</strong>
-                  </p>
-                </div>
+              <p className="font-semibold text-lg text-blue-800">料金</p>
 
-                {/* おまかせプラン */}
-                <div className="border p-4 rounded shadow bg-blue-50">
-                  <h3 className="font-bold text-pink-700">🎥 おまかせプラン</h3>
-                  <p className="mt-2 text-sm text-gray-600">
-                    弊社スタッフが直接訪問し、トップ動画・画像・商品写真などを撮影。
-                    編集・セットアップまでを一括でお任せいただける安心プランです。
+              <div className="mt-3 border p-4 rounded shadow bg-blue-50/60">
+                <h3 className="font-bold text-pink-700">
+                  制作・導入セット（撮影・編集込み）
+                </h3>
+                <p className="mt-2 text-sm text-gray-700">
+                  プロのカメラマンが撮影・編集。初期セットアップやSEO/OGP、アクセス計測の設定まで一括対応します。
+                </p>
+
+                <p className="mt-4">
+                  初期費用：<strong>80,000円</strong>（税別）
+                </p>
+
+                <ul className="mt-3 text-sm text-gray-700 space-y-1 list-disc list-inside">
+                  <li>プロ撮影・編集一式（トップ動画・画像対応）</li>
+                  <li>初期セットアップ／ページ初期構成</li>
+                  <li>基本SEO／OGP設定・アクセス計測</li>
+                  <li>独自ドメイン／サーバー設定・運用</li>
+                </ul>
+
+                <div className="mt-4 p-3 rounded bg-white/70 border">
+                  <p>
+                    <span className="font-semibold">
+                      運用サポート料（毎月）：
+                    </span>
+                    <strong>1,500円</strong>（税別）
                   </p>
-                  <p className="mt-4">
-                    初期費用：<strong>80,000円</strong>（撮影＋編集込み）
-                    <br />
-                    月額：<strong>1,500円</strong>
+                  <p className="text-xs text-gray-600 mt-1">
+                    <strong>
+                      ドメイン・サーバー費、SSL（https）もすべて含まれます。
+                    </strong>
+                    軽微な文言差し替え・画像更新のご相談、技術サポートも含みます。
                   </p>
                 </div>
               </div>
+
               <p className="text-sm text-gray-500 mt-2">
                 ※キャンペーンは予告なく終了する場合があります
               </p>
-              <p className="text-sm text-gray-500 mt-2">
-                ※撮影編集代行50,000円
-              </p>
             </div>
 
+            {/* CTA */}
             <div className="text-center mt-6">
               <a
                 href="/contact"
                 className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-md shadow hover:opacity-90 transition"
               >
-                この価格で導入したい方はこちら →
+                この内容で相談する →
               </a>
             </div>
 
             {/* 安さの理由 */}
             <div className="mt-4 text-sm text-gray-600 max-w-2xl mx-auto text-center">
               <p className="font-semibold text-gray-700 mb-1">
-                なぜ他社より安いの？
+                なぜ高品質なのに手頃？
               </p>
               <p>
-                Pageitは、開発者がすべての設計・運用を一人で行っているため、
-                <br />
-                大手のような人件費・管理コストが不要です。
-                <br />
-                またテンプレート化された仕組みにより、
-                <br />
-                スピーディかつ効率的に制作できるため、
+                Pageitは開発〜運用までをスリムな体制で一気通貫。テンプレート化と自動化により
                 <span className="font-medium text-blue-800">
-                  高品質かつ低価格
+                  {" "}
+                  高品質 × 低コスト × スピード{" "}
                 </span>
                 を実現しています。
               </p>
             </div>
 
             <p className="text-lg font-medium">
-              今だけのお得な価格で、あなたのお店をPageitで魅力的に発信してみませんか？
+              「伝わる」見せ方と「続く」運用で、あなたのお店をPageitが後押しします。
             </p>
           </section>
 
@@ -328,9 +332,9 @@ export default function GuidePage() {
               </div>
               <div className="border-l-4 border-green-400 pl-4">
                 <p className="text-gray-800">
-                  「撮影からすべてお任せできて助かりました。
+                  「撮影から監修までお任せで助かりました。
                   <br />
-                  今ではお客さんから『見やすいね』とよく言われます。」
+                  お客さんから『世界観が伝わる』と言われ、来店につながっています。」
                 </p>
                 <p className="text-sm text-gray-500 mt-1">― 整骨院 K様</p>
               </div>
