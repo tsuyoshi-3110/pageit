@@ -67,34 +67,30 @@ function FeatureSlideshow({
   intervalMs?: number;
 }) {
   const [index, setIndex] = useState(0);
-  const [dir, setDir] = useState(1); // 1: next / -1: prev
+  const [dir, setDir] = useState(1);
   const [paused, setPaused] = useState(false);
-  const [pulse, setPulse] = useState<null | "play" | "pause">(null); // 一瞬表示アイコン
+  const [pulse, setPulse] = useState<null | "play" | "pause">(null);
   const timer = useRef<NodeJS.Timeout | null>(null);
   const pulseTimer = useRef<NodeJS.Timeout | null>(null);
   const size = items.length;
 
-  // --- タップ/スワイプ判定用 ---
+  // --- タップ/スワイプ判定（以前のまま） ---
   const downRef = useRef<{ x: number; y: number; t: number } | null>(null);
   const didSwipeRef = useRef(false);
-
-  const TAP_MAX_DIST = 8; // px
-  const TAP_MAX_TIME = 300; // ms
+  const TAP_MAX_DIST = 8;
+  const TAP_MAX_TIME = 300;
 
   const go = (next: number, direction: number) => {
     setDir(direction);
     setIndex(((next % size) + size) % size);
   };
-
   const next = () => go(index + 1, 1);
   const prev = () => go(index - 1, -1);
 
   useEffect(() => {
     if (paused) return;
     timer.current = setTimeout(next, intervalMs);
-    return () => {
-      if (timer.current) clearTimeout(timer.current);
-    };
+    return () => { if (timer.current) clearTimeout(timer.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, paused, intervalMs]);
 
@@ -112,34 +108,19 @@ function FeatureSlideshow({
     });
   };
 
-  // スワイプ判定（距離 or 速度）＋「スワイプ成立時はトグル禁止フラグ」を立てる
-  const SWIPE = { offset: 60, velocity: 500 }; // px, px/s
-  const handleDragEnd = (
-    _: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
-  ) => {
+  const SWIPE = { offset: 60, velocity: 500 };
+  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const x = info.offset.x;
     const v = info.velocity.x;
     let swiped = false;
-
-    if (x < -SWIPE.offset || v < -SWIPE.velocity) {
-      next();
-      swiped = true;
-    } else if (x > SWIPE.offset || v > SWIPE.velocity) {
-      prev();
-      swiped = true;
-    }
-
+    if (x < -SWIPE.offset || v < -SWIPE.velocity) { next(); swiped = true; }
+    else if (x > SWIPE.offset || v > SWIPE.velocity) { prev(); swiped = true; }
     if (swiped) {
       didSwipeRef.current = true;
-      // 次の pointerup まで有効にして、その後リセット
-      setTimeout(() => {
-        didSwipeRef.current = false;
-      }, 250);
+      setTimeout(() => { didSwipeRef.current = false; }, 250);
     }
   };
 
-  // タップ検出（Pointerベース）
   const onPointerDown = (e: React.PointerEvent) => {
     downRef.current = { x: e.clientX, y: e.clientY, t: performance.now() };
   };
@@ -150,22 +131,11 @@ function FeatureSlideshow({
     const dy = e.clientY - downRef.current.y;
     const dist = Math.hypot(dx, dy);
     downRef.current = null;
-
-    // スワイプが直前に成立していたら何もしない（アイコンも出さない）
     if (didSwipeRef.current) return;
-
-    // 純タップと判断できた場合のみトグル
-    if (dist <= TAP_MAX_DIST && dt <= TAP_MAX_TIME) {
-      togglePaused();
-    }
+    if (dist <= TAP_MAX_DIST && dt <= TAP_MAX_TIME) togglePaused();
   };
 
-  // クリーンアップ
-  useEffect(() => {
-    return () => {
-      if (pulseTimer.current) clearTimeout(pulseTimer.current);
-    };
-  }, []);
+  useEffect(() => () => { if (pulseTimer.current) clearTimeout(pulseTimer.current); }, []);
 
   return (
     <div
@@ -175,70 +145,109 @@ function FeatureSlideshow({
       aria-roledescription="carousel"
       aria-label="Pageitの特長スライド"
     >
-      <div className="relative h-full">
-        <AnimatePresence custom={dir} mode="wait">
-          <motion.div
-            key={index}
-            custom={dir}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.25}
-            dragMomentum={false}
-            onDragEnd={handleDragEnd}
-            onPointerDown={onPointerDown}
-            onPointerUp={onPointerUp}
-            className="relative p-6 rounded-xl shadow-lg bg-white/35 backdrop-blur-sm ring-1 ring-white/40 min-h-[180px]
-                       select-none cursor-grab active:cursor-grabbing touch-pan-y"
-          >
-            {/* トグル時だけ中央に一瞬表示するアイコン（スワイプ時は出ない） */}
-            <AnimatePresence>
-              {pulse && (
-                <motion.div
-                  key={pulse}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.18 }}
-                  className="pointer-events-none absolute inset-0 grid place-items-center"
-                  aria-hidden
-                >
-                  <div className="rounded-full bg-black/55 p-3">
-                    {pulse === "pause" ? (
-                      <PauseIcon className="w-8 h-8 text-white" />
-                    ) : (
-                      <PlayIcon className="w-8 h-8 text-white" />
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+      {/* ★ ここを 1.5px → 1px に変更（サブピクセル回避） */}
+      <div className="relative rounded-2xl p-px bg-gradient-to-r from-white/50 via-white/20 to-white/50 shadow-[0_8px_30px_rgb(0_0_0_/_0.08)]">
+        <div className="relative h-full rounded-2xl bg-white/25 backdrop-blur-xl">
+          <AnimatePresence custom={dir} mode="wait">
+            <motion.div
+              key={index}
+              custom={dir}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.22}
+              dragMomentum={false}
+              onDragEnd={handleDragEnd}
+              onPointerDown={onPointerDown}
+              onPointerUp={onPointerUp}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="relative rounded-2xl ring-1 ring-white/40
+                         p-4 sm:p-5 md:p-6
+                         min-h-[140px] sm:min-h-[160px] md:min-h-[190px]
+                         select-none cursor-grab active:cursor-grabbing touch-pan-y"
+            >
+              {/* トグル時アイコン（スワイプ時は出ない） */}
+              <AnimatePresence>
+                {pulse && (
+                  <motion.div
+                    key={pulse}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                    className="pointer-events-none absolute inset-0 grid place-items-center"
+                    aria-hidden
+                  >
+                    <div className="rounded-full bg-black/55 p-2.5 md:p-3 shadow-lg">
+                      {pulse === "pause" ? (
+                        <PauseIcon className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                      ) : (
+                        <PlayIcon className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-            <h3 className="font-bold text-lg mb-2">{items[index].title}</h3>
-            <p className="text-gray-800/90">{items[index].body}</p>
-          </motion.div>
-        </AnimatePresence>
+              <h3 className="font-semibold text-base sm:text-lg md:text-xl leading-tight text-gray-900 mb-1.5">
+                {items[index].title}
+              </h3>
+              <p className="text-gray-800/90 text-sm sm:text-[15px] md:text-base leading-relaxed line-clamp-3 md:line-clamp-4">
+                {items[index].body}
+              </p>
+
+              {/* ★ 進捗バー：inset-x-0 ＋ scaleX アニメーションでズレ解消 */}
+              {/* <div className="absolute inset-x-0 bottom-0 h-[2px] overflow-hidden rounded-b-2xl">
+                <AnimatePresence mode="popLayout">
+                  {!paused && (
+                    <motion.div
+                      key={index}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: intervalMs / 1000, ease: "linear" }}
+                      style={{ transformOrigin: "0% 50%" }}
+                      className="h-full w-full will-change-transform bg-gradient-to-r from-purple-500/70 via-pink-500/70 to-orange-400/70"
+                    />
+                  )}
+                </AnimatePresence>
+              </div> */}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
 
-      {/* dots */}
-      <div className="mt-4 flex items-center justify-center gap-2">
-        {items.map((_, i) => (
-          <button
-            key={i}
-            aria-label={`スライド ${i + 1}`}
-            onClick={() => go(i, i > index ? 1 : -1)}
-            className={`h-2.5 rounded-full transition-all ${
-              i === index ? "w-6 bg-gray-800" : "w-2.5 bg-gray-500/60"
-            }`}
-          />
-        ))}
+      <div className="mt-2.5 text-center text-[11px] text-gray-700/80">
+        タップで一時停止/再生、左右スワイプで移動
+      </div>
+
+      <div className="mt-3.5 flex items-center justify-center gap-2.5">
+        {items.map((_, i) => {
+          const active = i === index;
+          return (
+            <button
+              key={i}
+              aria-label={`スライド ${i + 1}`}
+              aria-current={active ? "true" : undefined}
+              onClick={() => go(i, i > index ? 1 : -1)}
+              className={[
+                "h-2.5 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
+                active
+                  ? "w-7 bg-gray-900 shadow-sm ring-1 ring-white/60"
+                  : "w-2.5 bg-gray-600/50 hover:bg-gray-700/60",
+              ].join(" ")}
+            />
+          );
+        })}
       </div>
     </div>
   );
 }
+
+
 
 /* ====== Page ====== */
 export default function Home() {
@@ -265,18 +274,9 @@ export default function Home() {
       title: "📱 スマホで簡単編集",
       body: "PC不要。メニューやお知らせもその場で更新できます。インスタのような使い心地！",
     },
-    {
-      title: "🎥 トップ動画で印象UP",
-      body: "来店前のユーザーに強いインパクトを与える動画表示。",
-    },
-    {
-      title: "✍️ AIが文章を自動生成",
-      body: "商品説明やお知らせ文章も、キーワード入力だけでOK。",
-    },
-    {
-      title: "🔄 簡単に差し替え・更新",
-      body: "動画や画像を何度でも自由に変更でき、常に“今”の情報を発信。",
-    },
+    { title: "🎥 トップ動画で印象UP", body: "来店前のユーザーに強いインパクトを与える動画表示。" },
+    { title: "✍️ AIが文章を自動生成", body: "商品説明やお知らせ文章も、キーワード入力だけでOK。" },
+    { title: "🔄 簡単に差し替え・更新", body: "動画や画像を何度でも自由に変更でき、常に“今”の情報を発信。" },
     {
       title: "📸 プロ撮影＆編集、インフルエンサー監修",
       body: "現役カメラマンが撮影・編集。SNSに強いインフルエンサーが世界観を監修し、“映える”表現に。",
@@ -285,18 +285,9 @@ export default function Home() {
       title: "🤝 オーナー同士のネットワーク × AI協業提案",
       body: "オーナー同士で繋がれるコミュニティ。AIが相互送客や共同企画などの協業案を自動提案。",
     },
-    {
-      title: "📊 分析機能つき",
-      body: "アクセス数や人気ページがひと目でわかり、改善に役立てられます。AIアドバイスも。",
-    },
-    {
-      title: "🔍 SEO対策もバッチリ",
-      body: "スマホ対応・高速表示・OGP設定など、検索に強い構造です。",
-    },
-    {
-      title: "🌐 独自ドメイン対応",
-      body: "お店や会社の名前をそのままURLに。ブランド価値と信頼性がアップします。",
-    },
+    { title: "📊 分析機能つき", body: "アクセス数や人気ページがひと目でわかり、改善に役立てられます。AIアドバイスも。" },
+    { title: "🔍 SEO対策もバッチリ", body: "スマホ対応・高速表示・OGP設定など、検索に強い構造です。" },
+    { title: "🌐 独自ドメイン対応", body: "お店や会社の名前をそのままURLに。ブランド価値と信頼性がアップします。" },
   ];
 
   return (
@@ -313,10 +304,7 @@ export default function Home() {
           name="keywords"
           content="Pageit, ページット, ホームページ編集, スマホ更新, 店舗向けHP, 動画ホームページ, AIホームページ"
         />
-        <meta
-          property="og:title"
-          content="Pageit（ページット）｜スマホで簡単編集"
-        />
+        <meta property="og:title" content="Pageit（ページット）｜スマホで簡単編集" />
         <meta
           property="og:description"
           content="スマホで簡単に編集できるホームページ。動画・画像・AIがすべて揃った次世代型サブスク型Webサービス。"
@@ -339,27 +327,27 @@ export default function Home() {
       </Head>
 
       <main
-        className="relative min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 overflow-hidden"
+        className="relative min-h-screen bg-gradient-to-br from-sky-300 via-fuchsia-300 to-pink-300 overflow-hidden"
         role="main"
       >
-        {/* 背景アクセント */}
+        {/* 背景ブロブ：ふわっと動く光 */}
         <motion.div
           aria-hidden
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.25 }}
-          transition={{ duration: 1 }}
-          className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/30 blur-3xl"
+          className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-white/35 blur-3xl"
+          initial={{ opacity: 0.15, x: 0, y: 0 }}
+          animate={{ opacity: 0.25, x: [0, 15, -10, 0], y: [0, -10, 15, 0] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           aria-hidden
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.2 }}
-          transition={{ duration: 1.2 }}
-          className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-white/20 blur-3xl"
+          className="pointer-events-none absolute -bottom-28 -left-28 h-96 w-96 rounded-full bg-white/20 blur-3xl"
+          initial={{ opacity: 0.12, x: 0, y: 0 }}
+          animate={{ opacity: 0.2, x: [0, -12, 10, 0], y: [0, 14, -10, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <motion.div
-          className="max-w-4xl mx-auto px-6 py-8 space-y-8 text-gray-800"
+          className="max-w-4xl mx-auto px-6 py-8 md:py-14 space-y-6 text-gray-800"
           variants={container}
           initial="hidden"
           animate="show"
@@ -370,14 +358,15 @@ export default function Home() {
             variants={item}
             viewport={{ once: true, amount: 0.4 }}
           >
-            <h1 className="text-2xl font-bold text-gray-900 leading-tight">
-              <span className="inline-block my-1 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-transparent">
+            <h1 className="text-[1.5rem] md:text-4xl font-extrabold leading-tight">
+              <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-transparent tracking-tight">
                 スマホで編集、動画で魅せる。
               </span>
             </h1>
+
           </motion.section>
 
-          {/* ▼ 動画 */}
+          {/* ▼ 動画カード（枠と光沢の統一感） */}
           <motion.div
             className="flex justify-center"
             variants={item}
@@ -386,29 +375,34 @@ export default function Home() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="w-[260px] md:w-[360px] rounded-2xl shadow-xl ring-1 ring-white/50 overflow-hidden bg-black/20 backdrop-blur">
-              <video
-                ref={videoRef}
-                src="/movie2.mp4"
-                autoPlay
-                muted
-                playsInline
-                loop
-                preload="auto"
-                poster="/images/iconImage.png"
-                className="w-full h-full object-cover"
-              >
-                お使いのブラウザは video タグに対応していません。
-              </video>
+            <div className="rounded-2xl p-[1.5px] bg-gradient-to-r from-white/50 via-white/20 to-white/50 shadow-[0_8px_30px_rgb(0_0_0_/_0.08)]">
+              <div className="w-[280px] md:w-[380px] rounded-2xl overflow-hidden bg-black/25 backdrop-blur-xl ring-1 ring-white/40">
+                <video
+                  ref={videoRef}
+                  src="/movie2.mp4"
+                  autoPlay
+                  muted
+                  playsInline
+                  loop
+                  preload="auto"
+                  poster="/images/iconImage.png"
+                  className="w-full h-full object-cover"
+                >
+                  お使いのブラウザは video タグに対応していません。
+                </video>
+              </div>
             </div>
           </motion.div>
 
-          <section id="features" aria-labelledby="features-title">
-            <p className="text-lg text-gray-700 max-w-xl mx-auto">
-              Pageit（ページット）は、SNS世代のために設計された、動画×スマホ×AI対応のホームページサービスです。
+          <section id="about" aria-labelledby="about-title" className="text-center">
+             <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
+              Pageit（ページット）は、動画×スマホ×AIで“育てる”ホームページ。
             </p>
-            <p className="text-base text-gray-700/90">
-              これからの時代、ホームページは“作って終わり”ではなく、“育てていく”ものです。
+            <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
+              SNS世代のための、更新が“かんたん・楽しい・続く”Webサービス。
+            </p>
+            <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
+              作って終わりではなく、日々の“今”を映す場所に。
             </p>
           </section>
 
@@ -416,7 +410,7 @@ export default function Home() {
           <section id="features" aria-labelledby="features-title">
             <motion.h2
               variants={item}
-              className="text-2xl font-semibold text-center mb-6"
+              className="text-2xl md:text-3xl font-semibold text-center mb-6"
             >
               Pageitの特長
             </motion.h2>
@@ -425,13 +419,13 @@ export default function Home() {
 
           {/* CTA */}
           <motion.div
-            className="text-center mt-4"
+            className="text-center mt-2"
             variants={item}
             viewport={{ once: true, amount: 0.3 }}
           >
             <motion.a
               href="/contact"
-              className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-md shadow-lg hover:shadow-xl transition will-change-transform"
+              className="inline-block bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white px-7 py-3 rounded-lg shadow-lg hover:shadow-xl transition will-change-transform"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
             >
