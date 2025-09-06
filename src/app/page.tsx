@@ -90,7 +90,9 @@ function FeatureSlideshow({
   useEffect(() => {
     if (paused) return;
     timer.current = setTimeout(next, intervalMs);
-    return () => { if (timer.current) clearTimeout(timer.current); };
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, paused, intervalMs]);
 
@@ -109,15 +111,25 @@ function FeatureSlideshow({
   };
 
   const SWIPE = { offset: 60, velocity: 500 };
-  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const handleDragEnd = (
+    _: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
     const x = info.offset.x;
     const v = info.velocity.x;
     let swiped = false;
-    if (x < -SWIPE.offset || v < -SWIPE.velocity) { next(); swiped = true; }
-    else if (x > SWIPE.offset || v > SWIPE.velocity) { prev(); swiped = true; }
+    if (x < -SWIPE.offset || v < -SWIPE.velocity) {
+      next();
+      swiped = true;
+    } else if (x > SWIPE.offset || v > SWIPE.velocity) {
+      prev();
+      swiped = true;
+    }
     if (swiped) {
       didSwipeRef.current = true;
-      setTimeout(() => { didSwipeRef.current = false; }, 250);
+      setTimeout(() => {
+        didSwipeRef.current = false;
+      }, 250);
     }
   };
 
@@ -135,7 +147,12 @@ function FeatureSlideshow({
     if (dist <= TAP_MAX_DIST && dt <= TAP_MAX_TIME) togglePaused();
   };
 
-  useEffect(() => () => { if (pulseTimer.current) clearTimeout(pulseTimer.current); }, []);
+  useEffect(
+    () => () => {
+      if (pulseTimer.current) clearTimeout(pulseTimer.current);
+    },
+    []
+  );
 
   return (
     <div
@@ -247,8 +264,6 @@ function FeatureSlideshow({
   );
 }
 
-
-
 /* ====== Page ====== */
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -274,9 +289,22 @@ export default function Home() {
       title: "📱 スマホで簡単編集",
       body: "PC不要。メニューやお知らせもその場で更新できます。インスタのような使い心地！",
     },
-    { title: "🎥 トップ動画で印象UP", body: "来店前のユーザーに強いインパクトを与える動画表示。" },
-    { title: "✍️ AIが文章を自動生成", body: "商品説明やお知らせ文章も、キーワード入力だけでOK。" },
-    { title: "🔄 簡単に差し替え・更新", body: "動画や画像を何度でも自由に変更でき、常に“今”の情報を発信。" },
+    {
+      title: "🎥 トップ動画で印象UP",
+      body: "来店前のユーザーに強いインパクトを与える動画表示。",
+    },
+    {
+      title: "✍️ AIが文章を自動生成",
+      body: "商品説明やお知らせ文章も、キーワード入力だけでOK。",
+    },
+    {
+      title: "✍️ AIでかんたん多言語化",
+      body: "日本語で入力し、翻訳したい言語を選ぶだけで自動生成。",
+    },
+    {
+      title: "🔄 簡単に差し替え・更新",
+      body: "動画や画像を何度でも自由に変更でき、常に“今”の情報を発信。",
+    },
     {
       title: "📸 プロ撮影＆編集、インフルエンサー監修",
       body: "現役カメラマンが撮影・編集。SNSに強いインフルエンサーが世界観を監修し、“映える”表現に。",
@@ -285,9 +313,18 @@ export default function Home() {
       title: "🤝 オーナー同士のネットワーク × AI協業提案",
       body: "オーナー同士で繋がれるコミュニティ。AIが相互送客や共同企画などの協業案を自動提案。",
     },
-    { title: "📊 分析機能つき", body: "アクセス数や人気ページがひと目でわかり、改善に役立てられます。AIアドバイスも。" },
-    { title: "🔍 SEO対策もバッチリ", body: "スマホ対応・高速表示・OGP設定など、検索に強い構造です。" },
-    { title: "🌐 独自ドメイン対応", body: "お店や会社の名前をそのままURLに。ブランド価値と信頼性がアップします。" },
+    {
+      title: "📊 分析機能つき",
+      body: "アクセス数や人気ページがひと目でわかり、改善に役立てられます。AIアドバイスも。",
+    },
+    {
+      title: "🔍 SEO対策もバッチリ",
+      body: "スマホ対応・高速表示・OGP設定など、検索に強い構造です。",
+    },
+    {
+      title: "🌐 独自ドメイン対応",
+      body: "お店や会社の名前をそのままURLに。ブランド価値と信頼性がアップします。",
+    },
   ];
 
   return (
@@ -304,7 +341,10 @@ export default function Home() {
           name="keywords"
           content="Pageit, ページット, ホームページ編集, スマホ更新, 店舗向けHP, 動画ホームページ, AIホームページ"
         />
-        <meta property="og:title" content="Pageit（ページット）｜スマホで簡単編集" />
+        <meta
+          property="og:title"
+          content="Pageit（ページット）｜スマホで簡単編集"
+        />
         <meta
           property="og:description"
           content="スマホで簡単に編集できるホームページ。動画・画像・AIがすべて揃った次世代型サブスク型Webサービス。"
@@ -363,7 +403,6 @@ export default function Home() {
                 スマホで編集、動画で魅せる。
               </span>
             </h1>
-
           </motion.section>
 
           {/* ▼ 動画カード（枠と光沢の統一感） */}
@@ -394,8 +433,12 @@ export default function Home() {
             </div>
           </motion.div>
 
-          <section id="about" aria-labelledby="about-title" className="text-center">
-             <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
+          <section
+            id="about"
+            aria-labelledby="about-title"
+            className="text-center"
+          >
+            <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
               Pageit（ページット）は、動画×スマホ×AIで“育てる”ホームページ。
             </p>
             <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
