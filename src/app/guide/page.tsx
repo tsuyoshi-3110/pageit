@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Head from "next/head";
-import { useState } from "react"; // 追加
+import { useState } from "react";
 
 type GuideSection = {
   image: string;
@@ -66,10 +66,7 @@ export default function GuidePage() {
           name="keywords"
           content="Pageit, ページット, ホームページ編集, スマホ対応, 中小企業向け, 店舗ホームページ, 動画ホームページ, AI紹介文"
         />
-        <meta
-          property="og:title"
-          content="Pageit ご案内｜ホームページ機能紹介"
-        />
+        <meta property="og:title" content="Pageit ご案内｜ホームページ機能紹介" />
         <meta
           property="og:description"
           content="スマホ×動画×AI。Pageitは、誰でも簡単にホームページを更新できる店舗向けサービスです。"
@@ -96,14 +93,13 @@ export default function GuidePage() {
             </p>
           </section>
 
+          {/* ヒーロー動画 */}
           <div
             className={[
               "relative mx-auto rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/40 bg-black",
-              videoMeta.portrait ? "max-w-[260px]" : "max-w-xl", // ← 枠をさらに小さく
+              videoMeta.portrait ? "max-w-[260px]" : "max-w-xl",
             ].join(" ")}
-            style={{
-              aspectRatio: `${videoMeta.w} / ${videoMeta.h}`, // 動画比率で枠も変わる
-            }}
+            style={{ aspectRatio: `${videoMeta.w} / ${videoMeta.h}` }}
           >
             {/* やわらかい光彩 */}
             <div className="pointer-events-none absolute -inset-6 bg-gradient-to-r from-white/10 via-transparent to-white/10 blur-2xl" />
@@ -120,15 +116,10 @@ export default function GuidePage() {
                 const v = e.currentTarget;
                 const w = v.videoWidth || 9;
                 const h = v.videoHeight || 16;
-                setVideoMeta({
-                  w,
-                  h,
-                  portrait: h >= w,
-                  ready: true,
-                });
+                setVideoMeta({ w, h, portrait: h >= w, ready: true });
               }}
               className={[
-                "absolute inset-0 h-full w-full", // 枠にフィット
+                "absolute inset-0 h-full w-full",
                 videoMeta.portrait ? "object-contain" : "object-cover",
               ].join(" ")}
               aria-label="Pageit 紹介動画"
@@ -138,7 +129,7 @@ export default function GuidePage() {
             <div className="pointer-events-none absolute inset-0 ring-1 ring-white/20 rounded-2xl" />
           </div>
         </section>
-        {/* ▲▲ トップ：動画ヒーロー（縦長に最適化） ▲▲ */}
+        {/* ▲▲ トップ：動画ヒーロー ▲▲ */}
 
         <div className="max-w-5xl mx-auto space-y-16">
           {/* 各機能セクション */}
@@ -171,36 +162,67 @@ export default function GuidePage() {
             </section>
           ))}
 
+          {/* ▼▼ テキストと動画を1つのラッパでまとめて、間隔だけを小さく制御 ▼▼ */}
+          <div className="space-y-2"> {/* ← 必要に応じて space-y-1 / space-y-0 に変更 */}
+            <p className="text-center text-2xl">
+              自動で多言語翻訳。
+              <br />
+              世界中のユーザーに伝わります。
+            </p>
+
+            <div
+              className={[
+                "relative mx-auto rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/40 bg-black",
+                videoMeta.portrait ? "max-w-[260px]" : "max-w-xl",
+              ].join(" ")}
+              style={{ aspectRatio: `${videoMeta.w} / ${videoMeta.h}` }}
+            >
+              {/* やわらかい光彩 */}
+              <div className="pointer-events-none absolute -inset-6 bg-gradient-to-r from-white/10 via-transparent to-white/10 blur-2xl" />
+
+              {/* 動画本体 */}
+              <video
+                src="/setumei2.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                onLoadedMetadata={(e) => {
+                  const v = e.currentTarget;
+                  const w = v.videoWidth || 9;
+                  const h = v.videoHeight || 16;
+                  setVideoMeta({ w, h, portrait: h >= w, ready: true });
+                }}
+                className={[
+                  "absolute inset-0 h-full w-full",
+                  videoMeta.portrait ? "object-contain" : "object-cover",
+                ].join(" ")}
+                aria-label="Pageit 紹介動画（多言語翻訳紹介）"
+              />
+
+              {/* 枠のハイライト */}
+              <div className="pointer-events-none absolute inset-0 ring-1 ring-white/20 rounded-2xl" />
+            </div>
+          </div>
+          {/* ▲▲ ここまでを1ラッパに ▲▲ */}
+
           {/* 課題訴求 */}
           <section className="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-6 md:p-10 space-y-4">
-            <h2 className="text-2xl font-semibold">
-              こんな経験はありませんか？
-            </h2>
+            <h2 className="text-2xl font-semibold">こんな経験はありませんか？</h2>
             <ul className="list-disc pl-5 space-y-2 text-base">
-              <li>
-                新商品や価格を変えたいのに、業者さんに頼むと時間もお金もかかる…
-              </li>
-              <li>
-                「ちょっと直しておいて」と言ったまま、いつ反映されるか分からない…
-              </li>
-              <li>
-                外出先で、「あ、文章間違ってる！」と思っても修正できないモヤモヤ…
-              </li>
+              <li>新商品や価格を変えたいのに、業者さんに頼むと時間もお金もかかる…</li>
+              <li>「ちょっと直しておいて」と言ったまま、いつ反映されるか分からない…</li>
+              <li>外出先で、「あ、文章間違ってる！」と思っても修正できないモヤモヤ…</li>
             </ul>
 
             <p className="mt-4 text-gray-800">
               私も同じ経験をしました。だからこそ、
-              <span className="font-semibold">
-                スマホ1つで即編集・即反映できる
-              </span>
+              <span className="font-semibold">スマホ1つで即編集・即反映できる</span>
               「Pageit」を開発。さらに
-              <span className="font-semibold">
-                プロのカメラマンの撮影＆編集＋インフルエンサー監修
-              </span>
+              <span className="font-semibold">プロのカメラマンの撮影＆編集＋インフルエンサー監修</span>
               で“伝わる見せ方”を実現し、
-              <span className="font-semibold">
-                オーナー同士のネットワーク×AI協業提案
-              </span>
+              <span className="font-semibold">オーナー同士のネットワーク×AI協業提案</span>
               で集客面までバックアップします。
             </p>
           </section>
@@ -210,47 +232,24 @@ export default function GuidePage() {
             <h2 className="text-2xl font-bold">Pageitが選ばれる理由</h2>
             <ul className="list-disc list-inside text-left max-w-2xl mx-auto space-y-2">
               <li>スマホひとつでいつでも編集、PCは不要＆即反映</li>
-              <li>
-                トップページに<span className="font-semibold">動画</span>
-                、第一印象でしっかり差別化
-              </li>
-              <li>
-                <span className="font-semibold">AIが文章を自動生成</span>
-                、ライティングの手間を削減
-              </li>
-              <li>
-                <span className="font-semibold">
-                  プロ撮影＆編集＋インフルエンサー監修
-                </span>
-                で“映える”世界観に
-              </li>
-              <li>
-                <span className="font-semibold">
-                  オーナー同士のネットワーク × AI協業提案
-                </span>
-                で相互送客・共同企画を促進
-              </li>
+              <li>トップページに<span className="font-semibold">動画</span>、第一印象でしっかり差別化</li>
+              <li><span className="font-semibold">AIが文章を自動生成</span>、ライティングの手間を削減</li>
+              <li><span className="font-semibold">プロ撮影＆編集＋インフルエンサー監修</span>で“映える”世界観に</li>
+              <li><span className="font-semibold">オーナー同士のネットワーク × AI協業提案</span>で相互送客・共同企画を促進</li>
               <li>アクセス分析・SEO対策・OGPなど運用に強い設計</li>
               <li>月額制でランニングも安心（必要なときだけ差し替えOK）</li>
             </ul>
 
-            {/* 料金（単一プランに統一） */}
-            {/* 料金（単一プラン） */}
-            {/* 料金（単一プラン） */}
             <div className="mt-6 bg-blue-50 p-4 rounded-md border border-blue-300 shadow-sm max-w-md mx-auto">
               <p className="font-semibold text-lg text-blue-800">料金</p>
 
               <div className="mt-3 border p-4 rounded shadow bg-blue-50/60">
-                <h3 className="font-bold text-pink-700">
-                  制作・導入セット（撮影・編集込み）
-                </h3>
+                <h3 className="font-bold text-pink-700">制作・導入セット（撮影・編集込み）</h3>
                 <p className="mt-2 text-sm text-gray-700">
                   プロのカメラマンが撮影・編集。初期セットアップやSEO/OGP、アクセス計測の設定まで一括対応します。
                 </p>
 
-                <p className="mt-4">
-                  初期費用：<strong>80,000円</strong>（税別）
-                </p>
+                <p className="mt-4">初期費用：<strong>80,000円</strong>（税別）</p>
 
                 <ul className="mt-3 text-sm text-gray-700 space-y-1 list-disc list-inside">
                   <li>プロ撮影・編集一式（トップ動画・画像対応）</li>
@@ -261,23 +260,17 @@ export default function GuidePage() {
 
                 <div className="mt-4 p-3 rounded bg-white/70 border">
                   <p>
-                    <span className="font-semibold">
-                      運用サポート料（毎月）：
-                    </span>
+                    <span className="font-semibold">運用サポート料（毎月）：</span>
                     <strong>1,500円</strong>（税別）
                   </p>
                   <p className="text-xs text-gray-600 mt-1">
-                    <strong>
-                      ドメイン・サーバー費、SSL（https）もすべて含まれます。
-                    </strong>
+                    <strong>ドメイン・サーバー費、SSL（https）もすべて含まれます。</strong>
                     軽微な文言差し替え・画像更新のご相談、技術サポートも含みます。
                   </p>
                 </div>
               </div>
 
-              <p className="text-sm text-gray-500 mt-2">
-                ※キャンペーンは予告なく終了する場合があります
-              </p>
+              <p className="text-sm text-gray-500 mt-2">※キャンペーンは予告なく終了する場合があります</p>
             </div>
 
             {/* CTA */}
@@ -290,17 +283,11 @@ export default function GuidePage() {
               </a>
             </div>
 
-            {/* 安さの理由 */}
             <div className="mt-4 text-sm text-gray-600 max-w-2xl mx-auto text-center">
-              <p className="font-semibold text-gray-700 mb-1">
-                なぜ高品質なのに手頃？
-              </p>
+              <p className="font-semibold text-gray-700 mb-1">なぜ高品質なのに手頃？</p>
               <p>
                 Pageitは開発〜運用までをスリムな体制で一気通貫。テンプレート化と自動化により
-                <span className="font-medium text-blue-800">
-                  {" "}
-                  高品質 × 低コスト × スピード{" "}
-                </span>
+                <span className="font-medium text-blue-800"> 高品質 × 低コスト × スピード </span>
                 を実現しています。
               </p>
             </div>
