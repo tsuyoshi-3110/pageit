@@ -83,6 +83,14 @@ export default function Navbar() {
           </Link>
 
           <Link
+            href="/privacy"
+            onClick={() => setMenuOpen(false)}
+            className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
+          >
+            プライバシーポリシー
+          </Link>
+
+          <Link
             href="/legal"
             onClick={() => setMenuOpen(false)}
             className="w-52 text-center text-lg font-semibold text-white bg-purple-500 px-6 py-2 rounded-full shadow hover:bg-purple-600 transition"
