@@ -43,6 +43,17 @@ const sections: GuideSection[] = [
       "AIによる紹介文の自動生成ボタンを使えば、プロのような説明文がすぐに完成します。",
     ],
   },
+  {
+    image: "/images/ec.PNG",
+    alt: "Pageit グローバルECのイメージ",
+    title: "グローバルEC（越境販売）",
+    description: [
+      "ワンタップで世界に販売。言語表示は自由に選べて、配送先は主要国に対応。",
+      "円（JPY）でシンプル決済。海外注文でも金額はそのまま、安心運用。",
+      "カートでは『商品』と『送料』を分けて表示。見やすく、ユーザーに親切。",
+      "一定金額以上の送料無料も設定OK。プロモーションに活用できます。",
+    ],
+  },
 ];
 
 export default function GuidePage() {
@@ -60,16 +71,16 @@ export default function GuidePage() {
         <title>Pageit ご案内｜スマホで編集できる動画対応ホームページ</title>
         <meta
           name="description"
-          content="Pageit（ページット）の機能紹介ページです。スマホだけで簡単に編集・更新できるホームページ。トップ動画、画像スライド、AI文章生成など、今の店舗集客に必要な機能がすべて揃っています。"
+          content="Pageit（ページット）の機能紹介ページです。スマホだけで簡単に編集・更新できるホームページ。動画・画像・AI・グローバルECまで、今の集客に必要な機能がすべて揃っています。"
         />
         <meta
           name="keywords"
-          content="Pageit, ページット, ホームページ編集, スマホ対応, 中小企業向け, 店舗ホームページ, 動画ホームページ, AI紹介文"
+          content="Pageit, ページット, ホームページ編集, スマホ対応, 中小企業向け, 店舗ホームページ, 動画ホームページ, AI紹介文, EC, グローバルEC, 多言語"
         />
         <meta property="og:title" content="Pageit ご案内｜ホームページ機能紹介" />
         <meta
           property="og:description"
-          content="スマホ×動画×AI。Pageitは、誰でも簡単にホームページを更新できる店舗向けサービスです。"
+          content="スマホ×動画×AI×EC。Pageitは、誰でも簡単に更新・販売までできる店舗向けサービスです。"
         />
         <meta
           property="og:image"
@@ -90,6 +101,7 @@ export default function GuidePage() {
             <p className="text-lg max-w-3xl mx-auto">
               Pageit（ページット）は、動画・スマホ・AIを活用し、誰でも簡単にホームページを編集・運用できるサービスです。
               スマホだけで更新でき、トップに動画を配置できるなど、SNS時代の集客にぴったりです。
+              さらに、ワンタップで世界に販売できる「グローバルEC」にも標準対応。
             </p>
           </section>
 
@@ -162,50 +174,23 @@ export default function GuidePage() {
             </section>
           ))}
 
-          {/* ▼▼ テキストと動画を1つのラッパでまとめて、間隔だけを小さく制御 ▼▼ */}
-          <div className="space-y-2"> {/* ← 必要に応じて space-y-1 / space-y-0 に変更 */}
-            <p className="text-center text-2xl">
-              自動で多言語翻訳。
-              <br />
-              世界中のユーザーに伝わります。
+        
+
+          {/* グローバルECの要点（ベネフィット中心） */}
+          <section className="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-6 md:p-10 space-y-4">
+            <h2 className="text-2xl font-semibold">グローバルECのここが便利</h2>
+            <ul className="list-disc pl-5 space-y-2 text-base">
+              <li>言語表示は自由：例）中国語UIのまま、日本の住所で購入OK</li>
+              <li>主要国に配送対応：日本・北米・欧州主要国・アジア主要国・オセアニア・中東など</li>
+              <li>お会計は円（JPY）でシンプル。海外からの注文でも迷わない</li>
+              <li>カート画面は『商品代金』と『送料』を分けて表示し、見やすく安心</li>
+              <li>一定金額以上の送料無料も設定可能。販促に合わせて柔軟に運用</li>
+              <li>決済はStripeに委託。カード情報は安全に処理されます</li>
+            </ul>
+            <p className="text-sm text-gray-600">
+              ※ 配送先の国・地域はショップの運用方針に合わせて変更できます。
             </p>
-
-            <div
-              className={[
-                "relative mx-auto rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/40 bg-black",
-                videoMeta.portrait ? "max-w-[260px]" : "max-w-xl",
-              ].join(" ")}
-              style={{ aspectRatio: `${videoMeta.w} / ${videoMeta.h}` }}
-            >
-              {/* やわらかい光彩 */}
-              <div className="pointer-events-none absolute -inset-6 bg-gradient-to-r from-white/10 via-transparent to-white/10 blur-2xl" />
-
-              {/* 動画本体 */}
-              <video
-                src="/setumei2.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                onLoadedMetadata={(e) => {
-                  const v = e.currentTarget;
-                  const w = v.videoWidth || 9;
-                  const h = v.videoHeight || 16;
-                  setVideoMeta({ w, h, portrait: h >= w, ready: true });
-                }}
-                className={[
-                  "absolute inset-0 h-full w-full",
-                  videoMeta.portrait ? "object-contain" : "object-cover",
-                ].join(" ")}
-                aria-label="Pageit 紹介動画（多言語翻訳紹介）"
-              />
-
-              {/* 枠のハイライト */}
-              <div className="pointer-events-none absolute inset-0 ring-1 ring-white/20 rounded-2xl" />
-            </div>
-          </div>
-          {/* ▲▲ ここまでを1ラッパに ▲▲ */}
+          </section>
 
           {/* 課題訴求 */}
           <section className="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-6 md:p-10 space-y-4">
@@ -234,6 +219,7 @@ export default function GuidePage() {
               <li>スマホひとつでいつでも編集、PCは不要＆即反映</li>
               <li>トップページに<span className="font-semibold">動画</span>、第一印象でしっかり差別化</li>
               <li><span className="font-semibold">AIが文章を自動生成</span>、ライティングの手間を削減</li>
+              <li><span className="font-semibold">グローバルECに標準対応</span>、海外ファンにもすぐ販売</li>
               <li><span className="font-semibold">プロ撮影＆編集＋インフルエンサー監修</span>で“映える”世界観に</li>
               <li><span className="font-semibold">オーナー同士のネットワーク × AI協業提案</span>で相互送客・共同企画を促進</li>
               <li>アクセス分析・SEO対策・OGPなど運用に強い設計</li>

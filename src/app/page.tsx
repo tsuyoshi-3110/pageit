@@ -74,7 +74,7 @@ function FeatureSlideshow({
   const pulseTimer = useRef<NodeJS.Timeout | null>(null);
   const size = items.length;
 
-  // --- タップ/スワイプ判定（以前のまま） ---
+  // --- タップ/スワイプ判定 ---
   const downRef = useRef<{ x: number; y: number; t: number } | null>(null);
   const didSwipeRef = useRef(false);
   const TAP_MAX_DIST = 8;
@@ -162,7 +162,6 @@ function FeatureSlideshow({
       aria-roledescription="carousel"
       aria-label="Pageitの特長スライド"
     >
-      {/* ★ ここを 1.5px → 1px に変更（サブピクセル回避） */}
       <div className="relative rounded-2xl p-px bg-gradient-to-r from-white/50 via-white/20 to-white/50 shadow-[0_8px_30px_rgb(0_0_0_/_0.08)]">
         <div className="relative h-full rounded-2xl bg-white/25 backdrop-blur-xl">
           <AnimatePresence custom={dir} mode="wait">
@@ -187,7 +186,7 @@ function FeatureSlideshow({
                          min-h-[140px] sm:min-h-[160px] md:min-h-[190px]
                          select-none cursor-grab active:cursor-grabbing touch-pan-y"
             >
-              {/* トグル時アイコン（スワイプ時は出ない） */}
+              {/* トグル時アイコン */}
               <AnimatePresence>
                 {pulse && (
                   <motion.div
@@ -216,22 +215,6 @@ function FeatureSlideshow({
               <p className="text-gray-800/90 text-sm sm:text-[15px] md:text-base leading-relaxed line-clamp-3 md:line-clamp-4">
                 {items[index].body}
               </p>
-
-              {/* ★ 進捗バー：inset-x-0 ＋ scaleX アニメーションでズレ解消 */}
-              {/* <div className="absolute inset-x-0 bottom-0 h-[2px] overflow-hidden rounded-b-2xl">
-                <AnimatePresence mode="popLayout">
-                  {!paused && (
-                    <motion.div
-                      key={index}
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ duration: intervalMs / 1000, ease: "linear" }}
-                      style={{ transformOrigin: "0% 50%" }}
-                      className="h-full w-full will-change-transform bg-gradient-to-r from-purple-500/70 via-pink-500/70 to-orange-400/70"
-                    />
-                  )}
-                </AnimatePresence>
-              </div> */}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -284,47 +267,49 @@ export default function Home() {
     }
   }, []);
 
+  // もっと“使いたくなる”トーンにリライト
   const features = [
     {
-      title: "📱 スマホで簡単編集",
-      body: "PC不要。メニューやお知らせもその場で更新できます。インスタのような使い心地！",
+      title: "🌍 ワンタップで世界に販売",
+      body: "言語を選ぶだけ。海外のファンにも、いまの魅力をそのまま届けられます。",
     },
     {
-      title: "🎥 トップ動画で印象UP",
-      body: "来店前のユーザーに強いインパクトを与える動画表示。",
+      title: "⚡ 最短60秒で商品公開",
+      body: "タイトル・価格・写真の3点セット。スマホからそのまま出品。",
     },
     {
-      title: "✍️ AIが文章を自動生成",
-      body: "商品説明やお知らせ文章も、キーワード入力だけでOK。",
+      title: "🎥 トップ動画で一目惚れ",
+      body: "来店前から“雰囲気”が伝わる。動画で第一印象をアップデート。",
     },
     {
-      title: "✍️ AIでかんたん多言語化",
-      body: "日本語で入力し、翻訳したい言語を選ぶだけで自動生成。",
+      title: "🤖 テキストはAIにおまかせ",
+      body: "キーワードを入れるだけ。商品説明やお知らせ文をサクッと生成。",
     },
     {
-      title: "🔄 簡単に差し替え・更新",
-      body: "動画や画像を何度でも自由に変更でき、常に“今”の情報を発信。",
+      title: "🈳 多言語UIにワンクリック対応",
+      body: "英・仏・独・西・伊・中（簡/繁）・韓・日ほか。表示は自由、購入は主要国から。",
     },
     {
-      title: "📸 プロ撮影＆編集、インフルエンサー監修",
-      body: "現役カメラマンが撮影・編集。SNSに強いインフルエンサーが世界観を監修し、“映える”表現に。",
+      title: "🧩 SNSと相性バツグン",
+      body: "リンク共有もスムーズ。発見→購入までの距離をキュッと短縮。",
     },
     {
-      title: "🤝 オーナー同士のネットワーク × AI協業提案",
-      body: "オーナー同士で繋がれるコミュニティ。AIが相互送客や共同企画などの協業案を自動提案。",
+      title: "🛠️ 誰でもメンテ簡単",
+      body: "在庫・価格・写真の差し替えが即時反映。思い立ったらすぐ更新。",
     },
     {
-      title: "📊 分析機能つき",
-      body: "アクセス数や人気ページがひと目でわかり、改善に役立てられます。AIアドバイスも。",
+      title: "🔎 検索に強い設計",
+      body: "モバイル最適化・高速表示・OGPまで。見つかるための土台を完備。",
     },
-    {
-      title: "🔍 SEO対策もバッチリ",
-      body: "スマホ対応・高速表示・OGP設定など、検索に強い構造です。",
-    },
-    {
-      title: "🌐 独自ドメイン対応",
-      body: "お店や会社の名前をそのままURLに。ブランド価値と信頼性がアップします。",
-    },
+  ];
+
+  // グローバルECの魅力を“ベネフィット中心”に
+  const globalECPoints = [
+    "世界中の主要国から購入OK。言語は好きに選べて、送り先は自由に指定できます。",
+    "決済はシンプル＆安心のStripe。面倒な設定なしでスムーズにお支払いへ。",
+    "スマホ運用前提のUI。撮って・書いて・公開までのムダを徹底カット。",
+    "集客から販売までを一本化。投稿→ページ→決済まで、迷わない導線設計。",
+    "チーム運用もラク。誰が更新してもデザインが崩れないから“速い”が続く。",
   ];
 
   return (
@@ -335,11 +320,11 @@ export default function Home() {
         </title>
         <meta
           name="description"
-          content="Pageit（ページット）は、動画×スマホ×AIで簡単にホームページを更新できる中小企業・個人店舗向けの編集サービスです。スマホだけでトップ動画・画像・テキストを自在に管理できます。"
+          content="ワンタップで世界に販売。Pageit（ページット）は動画×スマホ×AIで、最短60秒で商品公開＆グローバル対応のストア体験を実現します。"
         />
         <meta
           name="keywords"
-          content="Pageit, ページット, ホームページ編集, スマホ更新, 店舗向けHP, 動画ホームページ, AIホームページ"
+          content="Pageit, ページット, ホームページ, EC, グローバルEC, 多言語, スマホ更新, 動画, AI, 中小企業, 個人店舗"
         />
         <meta
           property="og:title"
@@ -347,7 +332,7 @@ export default function Home() {
         />
         <meta
           property="og:description"
-          content="スマホで簡単に編集できるホームページ。動画・画像・AIがすべて揃った次世代型サブスク型Webサービス。"
+          content="スマホで“撮って・書いて・出す”。ワンタップで世界に販売できる次世代のホームページ＆EC。"
         />
         <meta
           property="og:image"
@@ -361,8 +346,7 @@ export default function Home() {
           name="google-site-verification"
           content="b2le0w60OVwzkCTsr2nc9z3Mdh5_MlfiFUQfsQXHo1w"
         />
-
-        {/* 動画の事前読み込み（src と一致） */}
+        {/* 動画の事前読み込み */}
         <link rel="preload" as="video" href="/movie2.mp4" type="video/mp4" />
       </Head>
 
@@ -370,7 +354,7 @@ export default function Home() {
         className="relative min-h-screen bg-gradient-to-br from-sky-300 via-fuchsia-300 to-pink-300 overflow-hidden"
         role="main"
       >
-        {/* 背景ブロブ：ふわっと動く光 */}
+        {/* 背景ブロブ */}
         <motion.div
           aria-hidden
           className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-white/35 blur-3xl"
@@ -387,7 +371,7 @@ export default function Home() {
         />
 
         <motion.div
-          className="max-w-4xl mx-auto px-6 py-8 md:py-14 space-y-6 text-gray-800"
+          className="max-w-4xl mx-auto px-6 py-8 md:py-14 space-y-8 text-gray-800"
           variants={container}
           initial="hidden"
           animate="show"
@@ -400,12 +384,12 @@ export default function Home() {
           >
             <h1 className="text-[1.5rem] md:text-4xl font-extrabold leading-tight">
               <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-transparent tracking-tight">
-                スマホで編集、動画で魅せる。
+                スマホで編集、動画で魅せる。ワンタップで世界に販売。
               </span>
             </h1>
           </motion.section>
 
-          {/* ▼ 動画カード（枠と光沢の統一感） */}
+          {/* 動画カード */}
           <motion.div
             className="flex justify-center"
             variants={item}
@@ -433,19 +417,17 @@ export default function Home() {
             </div>
           </motion.div>
 
+          {/* About */}
           <section
             id="about"
             aria-labelledby="about-title"
-            className="text-center"
+            className="text-center space-y-1"
           >
             <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
               Pageit（ページット）は、動画×スマホ×AIで“育てる”ホームページ。
             </p>
             <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
-              SNS世代のための、更新が“かんたん・楽しい・続く”Webサービス。
-            </p>
-            <p className="text-lg text-gray-800/90 max-w-2xl mx-auto">
-              作って終わりではなく、日々の“今”を映す場所に。
+              作って終わりじゃない。今日のベストを、今日のうちに世界へ。
             </p>
           </section>
 
@@ -458,6 +440,33 @@ export default function Home() {
               Pageitの特長
             </motion.h2>
             <FeatureSlideshow items={features} intervalMs={3500} />
+          </section>
+
+          {/* グローバルECセクション（ベネフィット訴求） */}
+          <section
+            id="global-ec"
+            aria-labelledby="global-ec-title"
+            className="mt-6"
+          >
+            <motion.h2
+              variants={item}
+              className="text-2xl md:text-3xl font-semibold text-center mb-4"
+            >
+              🌐 グローバルECに標準対応
+            </motion.h2>
+            <motion.div
+              variants={item}
+              className="mx-auto max-w-3xl rounded-2xl p-5 md:p-6 bg-white/60 backdrop-blur ring-1 ring-white/50 shadow-[0_8px_30px_rgb(0_0_0_/_0.06)]"
+            >
+              <ul className="list-disc pl-6 space-y-2 text-[15px] md:text-base text-gray-900/90">
+                {globalECPoints.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+              </ul>
+              <div className="mt-3 text-sm text-gray-700/80">
+                表示言語は自由、配送先は世界の主要国に対応。
+              </div>
+            </motion.div>
           </section>
 
           {/* CTA */}
