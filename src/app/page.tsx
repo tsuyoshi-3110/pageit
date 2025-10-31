@@ -312,6 +312,18 @@ export default function Home() {
     "チーム運用もラク。誰が更新してもデザインが崩れないから“速い”が続く。",
   ];
 
+  // ▼ 追加：AIサポート紹介（ベネフィット表現）
+  const aiSupportPoints = [
+    "サイト専用の知識庫を参照。商品・メニュー・住所など“いまの情報”から正確に回答。",
+    "在庫・価格と連携（設定済みサイト）。売切れ時は代替案や入荷案内も提案。",
+    "脱線ガード：意図が曖昧なときは推測せず、聞き返し／問い合わせへ丁寧に誘導。",
+    "やさしい日本語で短く説明。専門用語は極力ひかえます。",
+    "過去の会話を蓄積し、回答の正確性が自動で向上します。",
+    "AIが答えられなかった内容を確認し設定すれば、、次回以降の回答に反映することができます。。",
+    "AIの方針・口調・禁止事項などを事前に自由に指示できます。",
+    "保存時に原文から自動翻訳（最大16言語）。編集は原文のみ、表示は選択言語に自動切替。",
+  ];
+
   return (
     <>
       <Head>
@@ -465,6 +477,35 @@ export default function Home() {
               </ul>
               <div className="mt-3 text-sm text-gray-700/80">
                 表示言語は自由、配送先は世界の主要国に対応。
+              </div>
+            </motion.div>
+          </section>
+
+          {/* ▼ 追加：AIサポート紹介 */}
+          <section
+            id="ai-support"
+            aria-labelledby="ai-support-title"
+            className="mt-6"
+          >
+            <motion.h2
+              variants={item}
+              className="text-2xl md:text-3xl font-semibold text-center mb-4"
+            >
+              🤖 AIサポート
+            </motion.h2>
+
+            <motion.div
+              variants={item}
+              className="mx-auto max-w-3xl rounded-2xl p-5 md:p-6 bg-white/60 backdrop-blur ring-1 ring-white/50 shadow-[0_8px_30px_rgb(0_0_0_/_0.06)]"
+            >
+              <ul className="list-disc pl-6 space-y-2 text-[15px] md:text-base text-gray-900/90">
+                {aiSupportPoints.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+              </ul>
+              <div className="mt-3 text-sm text-gray-700/80">
+                ※
+                不明点は「わからない」と回答し、問い合わせに丁寧に誘導します。ハルシネーション抑制設計。
               </div>
             </motion.div>
           </section>

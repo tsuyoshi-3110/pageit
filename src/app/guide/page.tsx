@@ -11,6 +11,7 @@ type GuideSection = {
   description: string | string[];
 };
 
+/* ====== 機能セクション ====== */
 const sections: GuideSection[] = [
   {
     image: "/images/topImage.jpeg",
@@ -56,6 +57,18 @@ const sections: GuideSection[] = [
   },
 ];
 
+/* ====== AIサポートの要点（追記） ====== */
+const aiSupportPoints: string[] = [
+  "サイト専用の知識庫を参照。商品・メニュー・住所など“いまの情報”から正確に回答。",
+  "在庫・価格と連携（設定済みサイト）。売切れ時は代替案や入荷案内も提案。",
+  "脱線ガード：意図が曖昧な時は推測せず、聞き返し／問い合わせへ丁寧に誘導。",
+  "やさしい日本語で短く説明。専門用語は極力ひかえます。",
+  "過去のやり取りを学習し、回答の正確性が自動で向上します。",
+  "オーナー様が確認した内容は記憶し、次回以降の回答に反映します。",
+  "オーナー様はAIの口調・方針・禁止事項などを事前に自由指示できます。",
+  "多言語表示サイトでは、保存時に原文から自動翻訳（最大16言語）。編集は原文だけでOK。",
+];
+
 export default function GuidePage() {
   // ▼ 縦長動画に合わせて表示比率を自動調整
   const [videoMeta, setVideoMeta] = useState({
@@ -71,16 +84,16 @@ export default function GuidePage() {
         <title>Pageit ご案内｜スマホで編集できる動画対応ホームページ</title>
         <meta
           name="description"
-          content="Pageit（ページット）の機能紹介ページです。スマホだけで簡単に編集・更新できるホームページ。動画・画像・AI・グローバルECまで、今の集客に必要な機能がすべて揃っています。"
+          content="Pageit（ページット）の機能紹介ページ。スマホだけで簡単に編集・更新。動画・画像・AI・グローバルECまで、今の集客に必要な機能が揃っています。"
         />
         <meta
           name="keywords"
-          content="Pageit, ページット, ホームページ編集, スマホ対応, 中小企業向け, 店舗ホームページ, 動画ホームページ, AI紹介文, EC, グローバルEC, 多言語"
+          content="Pageit, ページット, ホームページ編集, スマホ対応, 中小企業, 店舗ホームページ, 動画, AIチャット, EC, グローバルEC, 多言語"
         />
         <meta property="og:title" content="Pageit ご案内｜ホームページ機能紹介" />
         <meta
           property="og:description"
-          content="スマホ×動画×AI×EC。Pageitは、誰でも簡単に更新・販売までできる店舗向けサービスです。"
+          content="スマホ×動画×AI×EC。誰でも簡単に更新・販売までできる店舗向けサービスです。"
         />
         <meta
           property="og:image"
@@ -99,9 +112,10 @@ export default function GuidePage() {
           <section className="text-center text-gray-800 space-y-4 mb-10">
             <h1 className="text-4xl font-bold">Pageit ご案内</h1>
             <p className="text-lg max-w-3xl mx-auto">
-              Pageit（ページット）は、動画・スマホ・AIを活用し、誰でも簡単にホームページを編集・運用できるサービスです。
-              スマホだけで更新でき、トップに動画を配置できるなど、SNS時代の集客にぴったりです。
-              さらに、ワンタップで世界に販売できる「グローバルEC」にも標準対応。
+              Pageit（ページット）は、<strong>動画・スマホ・AI</strong>を活用し、
+              誰でも簡単にホームページを編集・運用できるサービスです。
+              スマホだけで更新でき、トップに動画を配置できるなど、SNS時代の集客にぴったり。
+              さらに、ワンタップで世界に販売できる<strong>グローバルEC</strong>にも標準対応。
             </p>
           </section>
 
@@ -174,7 +188,44 @@ export default function GuidePage() {
             </section>
           ))}
 
-        
+          {/* ▼▼ 追加：AIサポート（専用UIイメージ＋説明） ▼▼ */}
+          <section className="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-6 md:p-10 space-y-5">
+            <h2 className="text-2xl font-semibold">🤖 専属AIサポート</h2>
+
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <figure className="flex-shrink-0">
+                <Image
+                  src="/images/ai.png"
+                  alt="専属AIサポートのモバイル画面例。質問『オススメはありますか』に対して、人気セットと価格をわかりやすく案内。"
+                  width={200}
+                  height={200}
+                  className="rounded-xl shadow-md ring-1 ring-black/10"
+                  sizes="(max-width: 768px) 80vw, 320px"
+                  priority
+                />
+                <figcaption className="mt-2 text-xs text-gray-600 text-center">
+                  実際のUIイメージ（モバイル表示例）
+                </figcaption>
+              </figure>
+
+              <div className="flex-1 space-y-3 text-gray-800">
+                <p>
+                  お客様の質問に、<strong>サイト固有の最新情報</strong>から回答します。
+                  価格や在庫、住所など“いま”の内容を参照し、わからない時は無理に断定せず
+                  お問い合わせへ丁寧に誘導。運用するほど賢く、正確になっていきます。
+                </p>
+                <ul className="list-disc pl-5 space-y-2">
+                  {aiSupportPoints.map((t, i) => (
+                    <li key={i}>{t}</li>
+                  ))}
+                </ul>
+                <p className="text-xs text-gray-600">
+                  ※ 画像内の価格・内容は表示例です。実際のご提供内容に合わせて回答します。
+                </p>
+              </div>
+            </div>
+          </section>
+          {/* ▲▲ 追加：AIサポート ▲▲ */}
 
           {/* グローバルECの要点（ベネフィット中心） */}
           <section className="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-6 md:p-10 space-y-4">
@@ -217,11 +268,22 @@ export default function GuidePage() {
             <h2 className="text-2xl font-bold">Pageitが選ばれる理由</h2>
             <ul className="list-disc list-inside text-left max-w-2xl mx-auto space-y-2">
               <li>スマホひとつでいつでも編集、PCは不要＆即反映</li>
-              <li>トップページに<span className="font-semibold">動画</span>、第一印象でしっかり差別化</li>
-              <li><span className="font-semibold">AIが文章を自動生成</span>、ライティングの手間を削減</li>
-              <li><span className="font-semibold">グローバルECに標準対応</span>、海外ファンにもすぐ販売</li>
-              <li><span className="font-semibold">プロ撮影＆編集＋インフルエンサー監修</span>で“映える”世界観に</li>
-              <li><span className="font-semibold">オーナー同士のネットワーク × AI協業提案</span>で相互送客・共同企画を促進</li>
+              <li>
+                トップページに<span className="font-semibold">動画</span>、第一印象でしっかり差別化
+              </li>
+              <li>
+                <span className="font-semibold">AIが文章を自動生成</span>、ライティングの手間を削減
+              </li>
+              <li>
+                <span className="font-semibold">グローバルECに標準対応</span>、海外ファンにもすぐ販売
+              </li>
+              <li>
+                <span className="font-semibold">プロ撮影＆編集＋インフルエンサー監修</span>で“映える”世界観に
+              </li>
+              <li>
+                <span className="font-semibold">オーナー同士のネットワーク × AI協業提案</span>
+                で相互送客・共同企画を促進
+              </li>
               <li>アクセス分析・SEO対策・OGPなど運用に強い設計</li>
               <li>月額制でランニングも安心（必要なときだけ差し替えOK）</li>
             </ul>
@@ -235,7 +297,9 @@ export default function GuidePage() {
                   プロのカメラマンが撮影・編集。初期セットアップやSEO/OGP、アクセス計測の設定まで一括対応します。
                 </p>
 
-                <p className="mt-4">初期費用：<strong>80,000円</strong>（税別）</p>
+                <p className="mt-4">
+                  初期費用：<strong>80,000円</strong>（税別）
+                </p>
 
                 <ul className="mt-3 text-sm text-gray-700 space-y-1 list-disc list-inside">
                   <li>プロ撮影・編集一式（トップ動画・画像対応）</li>
