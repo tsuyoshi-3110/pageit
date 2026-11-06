@@ -298,7 +298,7 @@ export default function GuidePage() {
                 </p>
 
                 <p className="mt-4">
-                  初期費用：<strong>80,000円</strong>（税別）
+                  初期費用：<strong>80,000円</strong>（税別・税込88,000円）
                 </p>
 
                 <ul className="mt-3 text-sm text-gray-700 space-y-1 list-disc list-inside">
@@ -311,7 +311,7 @@ export default function GuidePage() {
                 <div className="mt-4 p-3 rounded bg-white/70 border">
                   <p>
                     <span className="font-semibold">運用サポート料（毎月）：</span>
-                    <strong>1,500円</strong>（税別）
+                    <strong>3,980円</strong>（税別・税込4,378円）
                   </p>
                   <p className="text-xs text-gray-600 mt-1">
                     <strong>ドメイン・サーバー費、SSL（https）もすべて含まれます。</strong>
