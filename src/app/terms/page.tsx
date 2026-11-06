@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  const effective = "2025-09-26"; // 必要に応じて更新
+  const effective = "2026-11-06"; // 必要に応じて更新
   return (
     <main className="mx-auto max-w-3xl px-5 py-12">
       <h1 className="text-3xl font-bold tracking-tight">利用規約</h1>
@@ -18,7 +18,7 @@ export default function TermsPage() {
 
       <section className="mt-8 space-y-6 leading-relaxed">
         <p>
-          本利用規約（以下「本規約」）は、ゼノバント（運営者：斉藤 剛、
+          本利用規約（以下「本規約」）は、Xenovant合同会社（代表者：斉藤 剛、
           以下「当社」）が提供する「Pageit」（以下「本サービス」）の利用条件を定めるものです。
           ユーザーは、本規約に同意のうえ本サービスを利用するものとします。
         </p>
@@ -46,6 +46,18 @@ export default function TermsPage() {
             <li>有料プランの内容・料金・課金周期は、申込画面または当社サイトに表示します。</li>
             <li>ユーザーの都合による途中解約でも既に支払われた料金は返金されません（法令で認められる場合を除く）。</li>
           </ul>
+        </div>
+
+        <div>
+          <h2 className="text-xl font-semibold">3の2. AIコイン</h2>
+          <ol className="mt-2 list-decimal pl-6">
+            <li>対象の店舗には、AI機能に使える毎月のコインが付きます。コインは毎月1日（日本時間）に元の枚数に戻り、未使用分は繰り越せません。</li>
+            <li>コインは、AI機能の利用量に応じて当社の定める基準で消費します。訪問者が使うAIチャットの分も、その店舗のコインから消費します。</li>
+            <li>毎月のコインとXenoCoin（AI機能の追加コイン）を使い切ると、AI機能の全部または一部が利用できなくなります。</li>
+            <li>XenoCoinは、毎月のコインを使い切ったあとに、有効期限の近いものから使います。購入日から6か月で失効します。</li>
+            <li>XenoCoinは、現金への払い戻し、第三者への譲渡および換金はできません。解約後は未使用分を利用できず、払い戻しもしません。ただし、当社の責任で利用できなかった場合を除きます。</li>
+            <li>当社は、事前に告知したうえで、毎月のコインの枚数、消費の基準およびXenoCoinの価格を変更することがあります。</li>
+          </ol>
         </div>
 
         <div>
@@ -129,7 +141,7 @@ export default function TermsPage() {
           <h2 className="text-xl font-semibold">12. お問い合わせ</h2>
           <p className="mt-2">
             本規約に関するお問い合わせは、
-            <a href="mailto:info@pageit.shop" className="underline text-blue-600">pageitstore@gmail.com</a>
+            <a href="mailto:info@xenovant.jp" className="underline text-blue-600">info@xenovant.jp</a>
             までご連絡ください。
           </p>
         </div>

@@ -19,7 +19,7 @@ export default function PrivacyPage() {
 
       <section className="mt-8 space-y-6 leading-relaxed">
         <p>
-          本サービス「Pageit」（以下「当サービス」）は、ゼノバント（運営者：
+          本サービス「Pageit」（以下「当サービス」）は、Xenovant合同会社（代表者：
           斉藤 剛）が提供します。当サービスにおける利用者情報の取扱いについて、
           以下のとおりプライバシーポリシー（以下「本ポリシー」）を定めます。
         </p>
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         <div>
           <h2 className="text-xl font-semibold">1. 事業者情報</h2>
           <ul className="mt-2 list-disc pl-6">
-            <li>事業者名：ゼノバント（Pageit 運営）</li>
+            <li>事業者名：Xenovant合同会社（Pageit 運営）</li>
             <li>お問い合わせ：<a href="mailto:pageitstore@gmail.com" className="underline text-blue-600">pageitstore@gmail.com</a></li>
           </ul>
         </div>
